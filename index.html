@@ -127,8 +127,17 @@
 
     .folder-drag-over {
       border-color: var(--accent-color) !important;
-      background: rgba(255, 255, 255, 0.1) !important;
+      background: rgba(255, 255, 255, 0.12) !important;
       box-shadow: 0 0 25px var(--accent-glow) !important;
+    }
+
+    /* Tabs Styling */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
 
     /* Epic 3D Zoom Camera Effect on Click */
@@ -202,7 +211,7 @@
       </div>
 
       <!-- Nueva Carpeta Button -->
-      <button onclick="openFolderModal()" title="Crear Carpeta" class="h-12 px-4 rounded-2xl glass-ios flex items-center gap-2 text-theme hover:text-white hover:bg-theme hover:shadow-neon-btn transition-all duration-300 font-semibold text-xs uppercase tracking-wider">
+      <button onclick="openFolderModal()" title="Crear Carpeta Principal" class="h-12 px-4 rounded-2xl glass-ios flex items-center gap-2 text-theme hover:text-white hover:bg-theme hover:shadow-neon-btn transition-all duration-300 font-semibold text-xs uppercase tracking-wider">
         <i class="fa-solid fa-folder-plus text-base"></i>
         <span class="hidden sm:inline">Carpeta</span>
       </button>
@@ -253,7 +262,7 @@
     <p>Powered by Neon iOS Glassmorphism Engine &bull; All data stored locally</p>
   </footer>
 
-  <!-- MODAL: Crear Nueva Carpeta -->
+  <!-- MODAL: Crear Nueva Carpeta Principal -->
   <div id="folder-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
     <div class="glass-modal w-full max-w-sm rounded-3xl p-6 shadow-neon-glow relative transform scale-95 transition-all duration-300" id="folder-modal-content">
       <button onclick="closeFolderModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white text-xl w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition-all">
@@ -261,9 +270,9 @@
       </button>
 
       <h3 class="text-xl font-bold text-white mb-1 flex items-center gap-3">
-        <i class="fa-solid fa-folder-plus text-theme"></i> Nueva Carpeta
+        <i class="fa-solid fa-folder-plus text-theme"></i> Nueva Carpeta Principal
       </h3>
-      <p class="text-xs text-gray-400 mb-5">Ingresa el nombre para la nueva categoría.</p>
+      <p class="text-xs text-gray-400 mb-5">Ingresa el nombre para la categoría principal.</p>
 
       <form id="folder-form" onsubmit="handleCreateFolder(event)" class="space-y-4">
         <div>
@@ -278,7 +287,33 @@
     </div>
   </div>
 
-  <!-- MODAL: Editar Nombre de Carpeta -->
+  <!-- MODAL: Crear Nueva Subcarpeta -->
+  <div id="subfolder-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+    <div class="glass-modal w-full max-w-sm rounded-3xl p-6 shadow-neon-glow relative transform scale-95 transition-all duration-300" id="subfolder-modal-content">
+      <button onclick="closeSubfolderModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white text-xl w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition-all">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h3 class="text-xl font-bold text-white mb-1 flex items-center gap-3">
+        <i class="fa-solid fa-folder-tree text-theme"></i> Nueva Subcarpeta
+      </h3>
+      <p class="text-xs text-gray-400 mb-5" id="subfolder-parent-title">Crear subcarpeta dentro de...</p>
+
+      <form id="subfolder-form" onsubmit="handleCreateSubfolder(event)" class="space-y-4">
+        <input type="hidden" id="subfolder-parent-name">
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Nombre de la Subcarpeta</label>
+          <input type="text" id="new-subfolder-name" required placeholder="Ej: Opciones, Forex, Herramientas..." class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-theme transition-all">
+        </div>
+
+        <button type="submit" class="w-full py-3.5 rounded-xl bg-theme text-white font-bold tracking-wide shadow-neon-btn hover:opacity-90 transition-all flex items-center justify-center gap-2 mt-2">
+          <i class="fa-solid fa-check"></i> Crear Subcarpeta
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Editar Carpeta / Subcarpeta -->
   <div id="edit-folder-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
     <div class="glass-modal w-full max-w-sm rounded-3xl p-6 shadow-neon-glow relative transform scale-95 transition-all duration-300" id="edit-folder-modal-content">
       <button onclick="closeEditFolderModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white text-xl w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition-all">
@@ -291,7 +326,8 @@
       <p class="text-xs text-gray-400 mb-5">Modifica el nombre de la carpeta seleccionada.</p>
 
       <form id="edit-folder-form" onsubmit="handleEditFolder(event)" class="space-y-4">
-        <input type="hidden" id="old-folder-name">
+        <input type="hidden" id="old-folder-path">
+        <input type="hidden" id="edit-folder-type"> <!-- 'main' or 'sub' -->
         <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Nuevo Nombre</label>
           <input type="text" id="edit-folder-name" required placeholder="Ej: Trading, Personal..." class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-theme transition-all">
@@ -328,8 +364,8 @@
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Carpeta / Categoría</label>
-          <input type="text" id="site-folder" placeholder="Ej: General, Redes, Trading..." class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-theme transition-all" list="folder-suggestions">
+          <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Carpeta / Subcarpeta</label>
+          <input type="text" id="site-folder" placeholder="Ej: Trading o Trading / Opciones..." class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-theme transition-all" list="folder-suggestions">
           <datalist id="folder-suggestions"></datalist>
         </div>
 
@@ -400,8 +436,8 @@
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Carpeta / Categoría</label>
-          <input type="text" id="edit-site-folder" placeholder="Ej: General, Redes, Trading..." class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-theme transition-all" list="folder-suggestions">
+          <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Carpeta / Subcarpeta</label>
+          <input type="text" id="edit-site-folder" placeholder="Ej: Trading o Trading / Opciones..." class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-theme transition-all" list="folder-suggestions">
         </div>
 
         <!-- Selector de Tipo de Icono para Editar -->
@@ -466,9 +502,10 @@
   <!-- JavaScript Code Base -->
   <script>
     let websites = [];
-    let customFolders = [];
+    let customFolders = []; // Estructura: [{ name: "Trading", subfolders: ["Opciones", "Forex"] }]
     let currentTheme = 'red';
     let collapsedFolders = {};
+    let activeSubfolderTab = {}; // Almacena la subcarpeta activa por carpeta principal { "Trading": "Opciones" }
 
     let currentIconType = 'file';
     let uploadedIconData = '';
@@ -477,6 +514,8 @@
     let editUploadedIconData = '';
 
     let draggedId = null;
+    let draggedFolderName = null;
+    let draggedSubfolderInfo = null; // { parent: 'Trading', sub: 'Opciones' }
 
     // Initialize Page
     document.addEventListener('DOMContentLoaded', () => {
@@ -521,7 +560,13 @@
       }
 
       if (storedFolders) {
-        try { customFolders = JSON.parse(storedFolders); } catch(e) { customFolders = []; }
+        try {
+          const raw = JSON.parse(storedFolders);
+          customFolders = raw.map(item => {
+            if (typeof item === 'string') return { name: item, subfolders: [] };
+            return { name: item.name, subfolders: item.subfolders || [] };
+          });
+        } catch(e) { customFolders = []; }
       }
 
       if (stored) {
@@ -548,12 +593,17 @@
       renderWebsites();
     }
 
-    function toggleFolder(folderName) {
-      collapsedFolders[folderName] = !collapsedFolders[folderName];
+    function toggleFolder(folderKey) {
+      collapsedFolders[folderKey] = !collapsedFolders[folderKey];
       saveWebsites();
     }
 
-    // --- FOLDER MODAL CONTROLS (CREAR, EDITAR Y ELIMINAR) ---
+    function selectSubfolderTab(mainName, subName) {
+      activeSubfolderTab[mainName] = subName;
+      renderWebsites();
+    }
+
+    // --- CONTROLES DE MODALES DE CARPETAS Y SUBCARPETAS ---
     function openFolderModal() {
       const modal = document.getElementById('folder-modal');
       const content = document.getElementById('folder-modal-content');
@@ -579,8 +629,8 @@
       const folderName = document.getElementById('new-folder-name').value.trim();
       if (!folderName) return;
 
-      if (!customFolders.includes(folderName)) {
-        customFolders.push(folderName);
+      if (!customFolders.some(f => f.name.toLowerCase() === folderName.toLowerCase())) {
+        customFolders.push({ name: folderName, subfolders: [] });
         saveWebsites();
         showToast(`Carpeta "${folderName}" creada`);
       } else {
@@ -589,9 +639,55 @@
       closeFolderModal();
     }
 
-    function openEditFolderModal(folderName) {
-      document.getElementById('old-folder-name').value = folderName;
-      document.getElementById('edit-folder-name').value = folderName;
+    function openSubfolderModal(parentName) {
+      document.getElementById('subfolder-parent-name').value = parentName;
+      document.getElementById('subfolder-parent-title').textContent = `Crear subcarpeta dentro de "${parentName}"`;
+
+      const modal = document.getElementById('subfolder-modal');
+      const content = document.getElementById('subfolder-modal-content');
+      modal.classList.remove('pointer-events-none');
+      modal.classList.add('opacity-100');
+      content.classList.remove('scale-95');
+      content.classList.add('scale-100');
+      document.getElementById('new-subfolder-name').focus();
+    }
+
+    function closeSubfolderModal() {
+      const modal = document.getElementById('subfolder-modal');
+      const content = document.getElementById('subfolder-modal-content');
+      modal.classList.add('pointer-events-none');
+      modal.classList.remove('opacity-100');
+      content.classList.add('scale-95');
+      content.classList.remove('scale-100');
+      document.getElementById('subfolder-form').reset();
+    }
+
+    function handleCreateSubfolder(e) {
+      e.preventDefault();
+      const parentName = document.getElementById('subfolder-parent-name').value;
+      const subName = document.getElementById('new-subfolder-name').value.trim();
+      if (!parentName || !subName) return;
+
+      const parentObj = customFolders.find(f => f.name === parentName);
+      if (parentObj) {
+        if (!parentObj.subfolders.includes(subName)) {
+          parentObj.subfolders.push(subName);
+          activeSubfolderTab[parentName] = subName; // Seleccionar la subcarpeta recién creada
+          saveWebsites();
+          showToast(`Subcarpeta "${subName}" creada`);
+        } else {
+          showToast('La subcarpeta ya existe', 'error');
+        }
+      }
+      closeSubfolderModal();
+    }
+
+    function openEditFolderModal(path, type) {
+      document.getElementById('old-folder-path').value = path;
+      document.getElementById('edit-folder-type').value = type;
+
+      const currentName = type === 'sub' ? path.split(' / ')[1] : path;
+      document.getElementById('edit-folder-name').value = currentName;
 
       const modal = document.getElementById('edit-folder-modal');
       const content = document.getElementById('edit-folder-modal-content');
@@ -614,55 +710,83 @@
 
     function handleEditFolder(e) {
       e.preventDefault();
-      const oldName = document.getElementById('old-folder-name').value;
+      const oldPath = document.getElementById('old-folder-path').value;
+      const type = document.getElementById('edit-folder-type').value;
       const newName = document.getElementById('edit-folder-name').value.trim();
 
-      if (!newName || oldName === newName) {
-        closeEditFolderModal();
-        return;
-      }
+      if (!newName) return;
 
-      // Actualizar en customFolders
-      const folderIdx = customFolders.indexOf(oldName);
-      if (folderIdx !== -1) {
-        customFolders[folderIdx] = newName;
-      } else {
-        customFolders.push(newName);
-      }
+      if (type === 'main') {
+        const oldName = oldPath;
+        const mainObj = customFolders.find(f => f.name === oldName);
+        if (mainObj) mainObj.name = newName;
 
-      // Actualizar en sitios existentes
-      websites.forEach(item => {
-        if (item.folder === oldName) {
-          item.folder = newName;
+        websites.forEach(item => {
+          if (item.folder === oldName) {
+            item.folder = newName;
+          } else if (item.folder.startsWith(oldName + ' / ')) {
+            item.folder = item.folder.replace(oldName + ' / ', newName + ' / ');
+          }
+        });
+
+        if (activeSubfolderTab[oldName]) {
+          activeSubfolderTab[newName] = activeSubfolderTab[oldName];
+          delete activeSubfolderTab[oldName];
         }
-      });
+      } else {
+        const [parentName, oldSubName] = oldPath.split(' / ');
+        const mainObj = customFolders.find(f => f.name === parentName);
+        if (mainObj) {
+          const idx = mainObj.subfolders.indexOf(oldSubName);
+          if (idx !== -1) mainObj.subfolders[idx] = newName;
+        }
 
-      // Actualizar estado colapsado
-      if (collapsedFolders[oldName] !== undefined) {
-        collapsedFolders[newName] = collapsedFolders[oldName];
-        delete collapsedFolders[oldName];
+        const newPath = `${parentName} / ${newName}`;
+        websites.forEach(item => {
+          if (item.folder === oldPath) item.folder = newPath;
+        });
+
+        if (activeSubfolderTab[parentName] === oldSubName) {
+          activeSubfolderTab[parentName] = newName;
+        }
       }
 
       saveWebsites();
       closeEditFolderModal();
-      showToast(`Carpeta renombrada a "${newName}"`);
+      showToast('Nombre actualizado con éxito');
     }
 
-    function deleteFolder(folderName) {
-      if (confirm(`¿Eliminar la carpeta "${folderName}"? Sus accesos directos pasarán automáticamente a "General".`)) {
-        customFolders = customFolders.filter(f => f !== folderName);
-        websites.forEach(item => {
-          if (item.folder === folderName) {
-            item.folder = 'General';
+    function deleteFolder(path, type) {
+      if (confirm(`¿Eliminar "${path}"? Sus enlaces guardados pasarán a "General".`)) {
+        if (type === 'main') {
+          customFolders = customFolders.filter(f => f.name !== path);
+          websites.forEach(item => {
+            if (item.folder === path || item.folder.startsWith(path + ' / ')) {
+              item.folder = 'General';
+            }
+          });
+          delete activeSubfolderTab[path];
+        } else {
+          const [parentName, subName] = path.split(' / ');
+          const mainObj = customFolders.find(f => f.name === parentName);
+          if (mainObj) {
+            mainObj.subfolders = mainObj.subfolders.filter(s => s !== subName);
           }
-        });
-        delete collapsedFolders[folderName];
+          websites.forEach(item => {
+            if (item.folder === path) item.folder = 'General';
+          });
+          if (activeSubfolderTab[parentName] === subName) {
+            activeSubfolderTab[parentName] = 'all';
+          }
+        }
+
+        delete collapsedFolders[path];
         saveWebsites();
-        showToast(`Carpeta "${folderName}" eliminada.`);
+        showToast(`Carpeta "${path}" eliminada`);
       }
     }
 
-    // Render Websites grouped by Folders in LIST VIEW WITH LARGER ICONS
+    // Render Websites with TAB SUBFOLDERS Hierarchy
     function renderWebsites() {
       const container = document.getElementById('folders-container');
       const emptyState = document.getElementById('empty-state');
@@ -671,14 +795,24 @@
       container.innerHTML = '';
       datalist.innerHTML = '';
 
-      const folderSet = new Set([...customFolders, ...websites.map(item => item.folder || 'General')]);
-      if (folderSet.size === 0 && websites.length === 0) {
-        folderSet.add('General');
+      if (!customFolders.some(f => f.name === 'General')) {
+        customFolders.unshift({ name: 'General', subfolders: [] });
       }
-      
-      const folders = [...folderSet];
 
-      if (folders.length === 0 && websites.length === 0) {
+      websites.forEach(item => {
+        const parts = item.folder ? item.folder.split(' / ') : ['General'];
+        const mainName = parts[0];
+        let mainObj = customFolders.find(f => f.name === mainName);
+        if (!mainObj) {
+          mainObj = { name: mainName, subfolders: [] };
+          customFolders.push(mainObj);
+        }
+        if (parts.length > 1 && !mainObj.subfolders.includes(parts[1])) {
+          mainObj.subfolders.push(parts[1]);
+        }
+      });
+
+      if (customFolders.length === 0 && websites.length === 0) {
         emptyState.classList.remove('hidden');
         emptyState.classList.add('flex');
         container.classList.add('hidden');
@@ -689,115 +823,273 @@
       emptyState.classList.remove('flex');
       container.classList.remove('hidden');
 
-      folders.forEach(f => {
-        const option = document.createElement('option');
-        option.value = f;
-        datalist.appendChild(option);
+      customFolders.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m.name;
+        datalist.appendChild(opt);
+        m.subfolders.forEach(s => {
+          const subOpt = document.createElement('option');
+          subOpt.value = `${m.name} / ${s}`;
+          datalist.appendChild(subOpt);
+        });
       });
 
-      folders.forEach(folderName => {
-        const folderItems = websites.filter(item => (item.folder || 'General') === folderName);
-        const isCollapsed = !!collapsedFolders[folderName];
+      customFolders.forEach((mainObj, mainIndex) => {
+        const mainName = mainObj.name;
+        const mainKey = mainName;
+        const isMainCollapsed = !!collapsedFolders[mainKey];
+
+        const activeTab = activeSubfolderTab[mainName] || 'all';
+
+        let displayedItems = [];
+        if (activeTab === 'all') {
+          displayedItems = websites.filter(item => item.folder === mainName || item.folder.startsWith(mainName + ' / '));
+        } else if (activeTab === 'main_only') {
+          displayedItems = websites.filter(item => item.folder === mainName);
+        } else {
+          displayedItems = websites.filter(item => item.folder === `${mainName} / ${activeTab}`);
+        }
 
         const folderSection = document.createElement('div');
-        folderSection.className = 'glass-ios rounded-3xl p-6 transition-all duration-300';
-        folderSection.setAttribute('data-folder', folderName);
+        folderSection.className = 'glass-ios rounded-3xl p-6 transition-all duration-300 relative';
+        folderSection.setAttribute('data-folder-main', mainName);
+        folderSection.setAttribute('data-main-index', mainIndex);
 
+        folderSection.setAttribute('draggable', 'true');
+        folderSection.addEventListener('dragstart', handleMainFolderDragStart);
         folderSection.addEventListener('dragover', handleFolderDragOver);
         folderSection.addEventListener('dragenter', handleFolderDragEnter);
         folderSection.addEventListener('dragleave', handleFolderDragLeave);
         folderSection.addEventListener('drop', handleFolderDrop);
 
         folderSection.innerHTML = `
-          <div onclick="toggleFolder('${folderName}')" class="flex items-center justify-between cursor-pointer select-none pb-2 border-b border-gray-800/80 mb-4">
+          <!-- Cabecera de Carpeta Principal -->
+          <div onclick="toggleFolder('${mainKey}')" class="flex flex-wrap items-center justify-between cursor-grab active:cursor-grabbing select-none pb-3 border-b border-gray-800/80 mb-4">
             <div class="flex items-center gap-3">
-              <i class="fa-solid ${isCollapsed ? 'fa-folder' : 'fa-folder-open'} text-theme text-xl"></i>
-              <h2 class="text-xl font-bold text-white tracking-wide">${folderName}</h2>
-              <span class="text-xs text-gray-400 bg-white/10 px-2.5 py-0.5 rounded-full font-medium">${folderItems.length}</span>
+              <i class="fa-solid fa-grip-vertical text-gray-500 hover:text-white text-base mr-1"></i>
+              <i class="fa-solid ${isMainCollapsed ? 'fa-folder' : 'fa-folder-open'} text-theme text-2xl"></i>
+              <h2 class="text-2xl font-extrabold text-white tracking-wide">${mainName}</h2>
+              <span class="text-xs text-gray-400 bg-white/10 px-2.5 py-0.5 rounded-full font-medium">${countTotalSitesInMain(mainObj)}</span>
             </div>
-            <!-- Acciones de Carpeta: Editar y Eliminar -->
-            <div class="flex items-center gap-2">
-              <button onclick="event.stopPropagation(); openEditFolderModal('${folderName}');" title="Editar carpeta" class="text-gray-400 hover:text-white transition-colors text-sm px-2 py-1">
+            
+            <div class="flex items-center gap-2 mt-2 sm:mt-0">
+              <button onclick="event.stopPropagation(); openSubfolderModal('${mainName}');" title="Crear Subcarpeta" class="text-xs font-semibold text-theme hover:text-white bg-theme/10 hover:bg-theme px-3 py-1.5 rounded-xl border border-theme/30 transition-all flex items-center gap-1.5">
+                <i class="fa-solid fa-folder-tree"></i> + Subcarpeta
+              </button>
+              <button onclick="event.stopPropagation(); openEditFolderModal('${mainName}', 'main');" title="Editar carpeta" class="text-gray-400 hover:text-white transition-colors text-sm px-2 py-1">
                 <i class="fa-solid fa-pen-to-square"></i>
               </button>
-              ${folderName !== 'General' ? `
-                <button onclick="event.stopPropagation(); deleteFolder('${folderName}');" title="Eliminar carpeta" class="text-gray-500 hover:text-theme transition-colors text-sm px-2 py-1">
+              ${mainName !== 'General' ? `
+                <button onclick="event.stopPropagation(); deleteFolder('${mainName}', 'main');" title="Eliminar carpeta" class="text-gray-500 hover:text-theme transition-colors text-sm px-2 py-1">
                   <i class="fa-solid fa-trash-can"></i>
                 </button>
               ` : ''}
-              <i class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-300 ${isCollapsed ? '-rotate-90' : ''} ml-1"></i>
+              <i class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-300 ${isMainCollapsed ? '-rotate-90' : ''} ml-1"></i>
             </div>
           </div>
-          <!-- Grid Responsivo de 1 Columna (Móvil), 2 Columnas (Tablet/Medio), 3 Columnas (Pantalla Ancha) -->
-          <div class="folder-grid grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 min-h-[50px] ${isCollapsed ? 'hidden' : ''}" id="folder-grid-${folderName}">
-            ${folderItems.length === 0 ? '<div class="col-span-full text-center py-4 text-xs text-gray-500 border border-dashed border-gray-800 rounded-2xl">Arrastra sitios aquí para añadirlos a esta carpeta</div>' : ''}
+
+          <!-- Contenido Plegable Principal -->
+          <div class="${isMainCollapsed ? 'hidden' : 'space-y-5'}">
+            <!-- Pestañas (Tabs) de Subcarpetas -->
+            ${mainObj.subfolders.length > 0 ? renderSubfolderTabs(mainObj, activeTab) : ''}
+
+            <!-- Grid de accesos directos de la pestaña activa -->
+            <div class="folder-grid grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 min-h-[40px]" id="grid-tab-${CSS.escape(mainName)}">
+              ${displayedItems.length === 0 ? '<div class="col-span-full text-center py-6 text-xs text-gray-500 border border-dashed border-gray-800 rounded-2xl">Sin accesos directos en esta pestaña. Arrastra un sitio aquí.</div>' : ''}
+            </div>
           </div>
         `;
 
         container.appendChild(folderSection);
 
-        const grid = folderSection.querySelector(`#folder-grid-${CSS.escape(folderName)}`);
+        const grid = folderSection.querySelector(`#grid-tab-${CSS.escape(mainName)}`);
+        displayedItems.forEach(item => grid.appendChild(createCardElement(item)));
 
-        folderItems.forEach((item) => {
-          const card = document.createElement('div');
-          // Vista Lista con Icono Más Grande (w-16 h-16)
-          card.className = 'relative group ios-squircle glass-ios p-4 flex items-center justify-between cursor-grab active:cursor-grabbing border border-ios-border hover:border-theme transition-all duration-300 w-full min-w-0';
-          
-          card.setAttribute('draggable', 'true');
-          card.setAttribute('data-id', item.id);
+        // Configurar Eventos de Drag & Drop para Pestañas
+        setupSubfolderTabDragEvents(folderSection, mainName);
+      });
+    }
 
-          card.addEventListener('dragstart', handleDragStart);
-          card.addEventListener('dragover', handleDragOver);
-          card.addEventListener('dragenter', handleDragEnter);
-          card.addEventListener('dragleave', handleDragLeave);
-          card.addEventListener('drop', handleDrop);
-          card.addEventListener('dragend', handleDragEnd);
+    function countTotalSitesInMain(mainObj) {
+      let count = websites.filter(item => item.folder === mainObj.name).length;
+      mainObj.subfolders.forEach(s => {
+        count += websites.filter(item => item.folder === `${mainObj.name} / ${s}`).length;
+      });
+      return count;
+    }
 
-          // Iconos ampliados (w-10 h-10 para imágenes y text-3xl para fuentes)
-          let iconMarkup = '';
-          if (item.iconType === 'file' && item.iconValue) {
-            iconMarkup = `<img src="${item.iconValue}" alt="${item.name}" class="w-10 h-10 object-contain filter drop-shadow-[0_0_8px_var(--accent-glow)]">`;
-          } else if (item.iconValue && item.iconValue.startsWith('fa-')) {
-            iconMarkup = `<i class="${item.iconValue} text-3xl text-theme filter drop-shadow-[0_0_8px_var(--accent-glow)]"></i>`;
-          } else if (item.iconValue) {
-            iconMarkup = `<span class="text-3xl">${item.iconValue}</span>`;
-          } else {
-            iconMarkup = `<i class="fa-solid fa-globe text-3xl text-theme"></i>`;
+    function renderSubfolderTabs(mainObj, activeTab) {
+      const mainName = mainObj.name;
+      const allCount = countTotalSitesInMain(mainObj);
+
+      return `
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 border-b border-gray-800/50">
+          <!-- Pestaña 'Todo' -->
+          <button onclick="selectSubfolderTab('${mainName}', 'all')" class="px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 ${activeTab === 'all' ? 'bg-theme text-white shadow-neon-btn' : 'bg-black/40 text-gray-400 hover:text-white hover:bg-white/10'}">
+            <i class="fa-solid fa-layer-group"></i> Todo
+            <span class="text-[10px] px-1.5 py-0.2 rounded-full ${activeTab === 'all' ? 'bg-black/30 text-white' : 'bg-white/10 text-gray-400'}">${allCount}</span>
+          </button>
+
+          <!-- Pestañas de Subcarpetas Arrastrables -->
+          ${mainObj.subfolders.map((subName, subIndex) => {
+            const subPath = `${mainName} / ${subName}`;
+            const isSelected = activeTab === subName;
+            const count = websites.filter(item => item.folder === subPath).length;
+
+            return `
+              <div 
+                draggable="true" 
+                data-tab-parent="${mainName}" 
+                data-tab-sub="${subName}" 
+                data-tab-index="${subIndex}"
+                onclick="selectSubfolderTab('${mainName}', '${subName}')"
+                class="group flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap cursor-grab active:cursor-grabbing border transition-all ${isSelected ? 'bg-theme/20 border-theme text-white shadow-neon-glow' : 'bg-black/40 border-gray-800/80 text-gray-400 hover:text-white hover:bg-white/10'}"
+              >
+                <i class="fa-solid fa-folder text-theme/80"></i>
+                <span>${subName}</span>
+                <span class="text-[10px] px-1.5 py-0.2 rounded-full ${isSelected ? 'bg-theme text-white' : 'bg-white/10 text-gray-400'}">${count}</span>
+                
+                <!-- Acciones Rápidas en Pestaña -->
+                <div class="flex items-center gap-1 ml-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span onclick="event.stopPropagation(); openEditFolderModal('${subPath}', 'sub');" title="Editar subcarpeta" class="hover:text-theme px-1">
+                    <i class="fa-solid fa-pen-to-square text-[11px]"></i>
+                  </span>
+                  <span onclick="event.stopPropagation(); deleteFolder('${subPath}', 'sub');" title="Eliminar subcarpeta" class="hover:text-theme px-1">
+                    <i class="fa-solid fa-xmark text-[11px]"></i>
+                  </span>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function setupSubfolderTabDragEvents(folderSection, mainName) {
+      const tabs = folderSection.querySelectorAll('[data-tab-sub]');
+      tabs.forEach(tab => {
+        tab.addEventListener('dragstart', (e) => {
+          e.stopPropagation();
+          const subName = tab.getAttribute('data-tab-sub');
+          draggedSubfolderInfo = { parent: mainName, sub: subName };
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/subfolder', JSON.stringify(draggedSubfolderInfo));
+        });
+
+        tab.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          tab.classList.add('border-theme', 'bg-theme/30');
+        });
+
+        tab.addEventListener('dragleave', (e) => {
+          tab.classList.remove('border-theme', 'bg-theme/30');
+        });
+
+        tab.addEventListener('drop', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          tab.classList.remove('border-theme', 'bg-theme/30');
+
+          const targetSub = tab.getAttribute('data-tab-sub');
+
+          // 1. Reordenar Pestañas
+          if (draggedSubfolderInfo && draggedSubfolderInfo.parent === mainName) {
+            const mainObj = customFolders.find(f => f.name === mainName);
+            if (mainObj) {
+              const fromIdx = mainObj.subfolders.indexOf(draggedSubfolderInfo.sub);
+              const toIdx = mainObj.subfolders.indexOf(targetSub);
+
+              if (fromIdx !== -1 && toIdx !== -1 && fromIdx !== toIdx) {
+                const moved = mainObj.subfolders.splice(fromIdx, 1)[0];
+                mainObj.subfolders.splice(toIdx, 0, moved);
+                saveWebsites();
+                showToast('¡Pestañas reordenadas!');
+              }
+            }
+            draggedSubfolderInfo = null;
+            return;
           }
 
-          card.innerHTML = `
-            <!-- Click para Lanzar Sitio (Icono de 16x16 + Nombre Completo en break-words) -->
-            <div onclick="launchWebsite('${item.url}', this)" class="flex items-center gap-4 flex-grow min-w-0 cursor-pointer pr-2">
-              <div class="w-16 h-16 rounded-2xl glass-ios flex-shrink-0 flex items-center justify-center shadow-neon-glow group-hover:scale-105 transition-transform duration-300">
-                ${iconMarkup}
-              </div>
-              <div class="flex flex-col min-w-0 flex-grow">
-                <h3 class="text-base font-bold text-white break-words leading-snug">${item.name}</h3>
-              </div>
-            </div>
-
-            <!-- Botones de Acción a la Derecha -->
-            <div class="flex items-center gap-2 flex-shrink-0">
-              <button onclick="event.stopPropagation(); openDescModal('${item.id}');" title="Ver descripción" class="text-theme hover:text-white bg-theme/10 hover:bg-theme w-8 h-8 rounded-xl border border-theme/30 transition-all flex items-center justify-center">
-                <i class="fa-solid fa-circle-info text-xs"></i>
-              </button>
-              <button onclick="event.stopPropagation(); openEditModal('${item.id}');" title="Editar enlace" class="text-gray-400 hover:text-white w-8 h-8 rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center">
-                <i class="fa-solid fa-pen-to-square text-xs"></i>
-              </button>
-              <button onclick="event.stopPropagation(); deleteWebsite('${item.id}');" title="Eliminar enlace" class="text-gray-500 hover:text-theme w-8 h-8 rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center">
-                <i class="fa-solid fa-trash-can text-xs"></i>
-              </button>
-            </div>
-          `;
-
-          grid.appendChild(card);
+          // 2. Mover Acceso Directo a Pestaña Soltada
+          if (draggedId) {
+            const destPath = `${mainName} / ${targetSub}`;
+            const item = websites.find(w => w.id === draggedId);
+            if (item && item.folder !== destPath) {
+              item.folder = destPath;
+              activeSubfolderTab[mainName] = targetSub;
+              saveWebsites();
+              showToast(`Movido a subcarpeta "${targetSub}"`);
+            }
+          }
         });
       });
     }
 
-    // --- Drag and Drop Handlers (Tarjetas) ---
+    // Crear elemento DOM de la tarjeta en lista
+    function createCardElement(item) {
+      const card = document.createElement('div');
+      card.className = 'relative group ios-squircle glass-ios p-4 flex items-center justify-between cursor-grab active:cursor-grabbing border border-ios-border hover:border-theme transition-all duration-300 w-full min-w-0';
+      
+      card.setAttribute('draggable', 'true');
+      card.setAttribute('data-id', item.id);
+
+      card.addEventListener('dragstart', handleDragStart);
+      card.addEventListener('dragover', handleDragOver);
+      card.addEventListener('dragenter', handleDragEnter);
+      card.addEventListener('dragleave', handleDragLeave);
+      card.addEventListener('drop', handleDrop);
+      card.addEventListener('dragend', handleDragEnd);
+
+      let iconMarkup = '';
+      if (item.iconType === 'file' && item.iconValue) {
+        iconMarkup = `<img src="${item.iconValue}" alt="${item.name}" class="w-10 h-10 object-contain filter drop-shadow-[0_0_8px_var(--accent-glow)]">`;
+      } else if (item.iconValue && item.iconValue.startsWith('fa-')) {
+        iconMarkup = `<i class="${item.iconValue} text-3xl text-theme filter drop-shadow-[0_0_8px_var(--accent-glow)]"></i>`;
+      } else if (item.iconValue) {
+        iconMarkup = `<span class="text-3xl">${item.iconValue}</span>`;
+      } else {
+        iconMarkup = `<i class="fa-solid fa-globe text-3xl text-theme"></i>`;
+      }
+
+      card.innerHTML = `
+        <div onclick="launchWebsite('${item.url}', this)" class="flex items-center gap-4 flex-grow min-w-0 cursor-pointer pr-2">
+          <div class="w-16 h-16 rounded-2xl glass-ios flex-shrink-0 flex items-center justify-center shadow-neon-glow group-hover:scale-105 transition-transform duration-300">
+            ${iconMarkup}
+          </div>
+          <div class="flex flex-col min-w-0 flex-grow">
+            <h3 class="text-base font-bold text-white break-words leading-snug">${item.name}</h3>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <button onclick="event.stopPropagation(); openDescModal('${item.id}');" title="Ver descripción" class="text-theme hover:text-white bg-theme/10 hover:bg-theme w-8 h-8 rounded-xl border border-theme/30 transition-all flex items-center justify-center">
+            <i class="fa-solid fa-circle-info text-xs"></i>
+          </button>
+          <button onclick="event.stopPropagation(); openEditModal('${item.id}');" title="Editar enlace" class="text-gray-400 hover:text-white w-8 h-8 rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center">
+            <i class="fa-solid fa-pen-to-square text-xs"></i>
+          </button>
+          <button onclick="event.stopPropagation(); deleteWebsite('${item.id}');" title="Eliminar enlace" class="text-gray-500 hover:text-theme w-8 h-8 rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center">
+            <i class="fa-solid fa-trash-can text-xs"></i>
+          </button>
+        </div>
+      `;
+      return card;
+    }
+
+    // --- DRAG AND DROP HANDLERS (CARPETAS Y TARJETAS) ---
+    function handleMainFolderDragStart(e) {
+      if (e.target.closest('.ios-squircle') || e.target.closest('[data-tab-sub]')) return;
+      draggedFolderName = this.getAttribute('data-folder-main');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/folder', draggedFolderName);
+    }
+
     function handleDragStart(e) {
+      e.stopPropagation();
       draggedId = this.getAttribute('data-id');
+      draggedFolderName = null;
+      draggedSubfolderInfo = null;
       e.dataTransfer.effectAllowed = 'move';
       e.dataTransfer.setData('text/plain', draggedId);
       this.classList.add('dragging');
@@ -810,9 +1102,11 @@
     }
 
     function handleDragEnter(e) {
-      const targetId = this.getAttribute('data-id');
-      if (targetId !== draggedId) {
-        this.classList.add('drag-over');
+      if (draggedId) {
+        const targetId = this.getAttribute('data-id');
+        if (targetId && targetId !== draggedId) {
+          this.classList.add('drag-over');
+        }
       }
     }
 
@@ -824,7 +1118,7 @@
       if (e.stopPropagation) e.stopPropagation();
       const targetId = this.getAttribute('data-id');
 
-      if (draggedId && draggedId !== targetId) {
+      if (draggedId && targetId && draggedId !== targetId) {
         const fromIndex = websites.findIndex(w => w.id === draggedId);
         const toIndex = websites.findIndex(w => w.id === targetId);
 
@@ -842,11 +1136,12 @@
     function handleDragEnd(e) {
       this.classList.remove('dragging');
       document.querySelectorAll('.ios-squircle').forEach(card => card.classList.remove('drag-over'));
-      document.querySelectorAll('[data-folder]').forEach(folder => folder.classList.remove('folder-drag-over'));
+      document.querySelectorAll('[data-folder-main]').forEach(folder => folder.classList.remove('folder-drag-over'));
       draggedId = null;
+      draggedFolderName = null;
+      draggedSubfolderInfo = null;
     }
 
-    // --- Drag and Drop Handlers (Carpeta) ---
     function handleFolderDragOver(e) {
       if (e.preventDefault) e.preventDefault();
       e.dataTransfer.dropEffect = 'move';
@@ -864,14 +1159,35 @@
     function handleFolderDrop(e) {
       if (e.stopPropagation) e.stopPropagation();
       this.classList.remove('folder-drag-over');
-      
-      const targetFolder = this.getAttribute('data-folder');
-      if (draggedId && targetFolder) {
-        const item = websites.find(w => w.id === draggedId);
-        if (item && item.folder !== targetFolder) {
-          item.folder = targetFolder;
-          saveWebsites();
-          showToast(`Movido a "${targetFolder}"`);
+
+      // Reordenar carpetas principales
+      if (draggedFolderName) {
+        const targetMainName = this.getAttribute('data-folder-main');
+        if (targetMainName && draggedFolderName !== targetMainName) {
+          const fromIdx = customFolders.findIndex(f => f.name === draggedFolderName);
+          const toIdx = customFolders.findIndex(f => f.name === targetMainName);
+          if (fromIdx !== -1 && toIdx !== -1) {
+            const moved = customFolders.splice(fromIdx, 1)[0];
+            customFolders.splice(toIdx, 0, moved);
+            saveWebsites();
+            showToast('¡Orden de carpetas actualizado!');
+          }
+        }
+        draggedFolderName = null;
+        return false;
+      }
+
+      // Mover acceso directo a la carpeta principal
+      if (draggedId) {
+        const targetMainName = this.getAttribute('data-folder-main');
+        if (targetMainName) {
+          const item = websites.find(w => w.id === draggedId);
+          if (item && item.folder !== targetMainName) {
+            item.folder = targetMainName;
+            activeSubfolderTab[targetMainName] = 'all';
+            saveWebsites();
+            showToast(`Movido a "${targetMainName}"`);
+          }
         }
       }
       return false;
@@ -1078,10 +1394,6 @@
 
       let iconValue = (currentIconType === 'file') ? uploadedIconData : (faValue || 'fa-solid fa-globe');
 
-      if (!customFolders.includes(folder)) {
-        customFolders.push(folder);
-      }
-
       websites.push({
         id: 'site_' + Date.now(),
         name,
@@ -1110,10 +1422,6 @@
       const faValue = document.getElementById('edit-site-icon-fa').value.trim();
 
       let iconValue = (editIconType === 'file') ? editUploadedIconData : (faValue || 'fa-solid fa-globe');
-
-      if (!customFolders.includes(folder)) {
-        customFolders.push(folder);
-      }
 
       websites[index] = {
         id,
