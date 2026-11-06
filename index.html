@@ -24,21 +24,21 @@
           },
           colors: {
             neon: {
-              red: '#ff0033',
-              glow: '#ff1a40',
-              darkred: '#80001a',
+              red: 'var(--accent-color)',
+              glow: 'var(--accent-glow)',
+              darkred: 'var(--accent-dark)',
             },
             ios: {
               bg: '#050507',
               card: 'rgba(18, 18, 22, 0.65)',
               modal: 'rgba(22, 22, 28, 0.92)',
-              border: 'rgba(255, 0, 51, 0.25)',
+              border: 'var(--border-color)',
             }
           },
           boxShadow: {
-            'neon-glow': '0 0 25px rgba(255, 0, 51, 0.45), 0 0 50px rgba(255, 0, 51, 0.15)',
-            'neon-btn': '0 0 15px rgba(255, 0, 51, 0.5)',
-            'ios-card': '0 10px 30px -10px rgba(0, 0, 0, 0.8), 0 0 1px 1px rgba(255, 0, 51, 0.2)',
+            'neon-glow': '0 0 25px var(--accent-glow), 0 0 50px rgba(0, 0, 0, 0.3)',
+            'neon-btn': '0 0 15px var(--accent-glow)',
+            'ios-card': '0 10px 30px -10px rgba(0, 0, 0, 0.8), 0 0 1px 1px var(--border-color)',
           }
         }
       }
@@ -46,6 +46,25 @@
   </script>
 
   <style>
+    :root {
+      --accent-color: #ff0033;
+      --accent-glow: rgba(255, 0, 51, 0.45);
+      --accent-dark: #80001a;
+      --border-color: rgba(255, 0, 51, 0.25);
+    }
+
+    [data-theme="cyan"] {
+      --accent-color: #00ffff;
+      --accent-glow: rgba(0, 255, 255, 0.45);
+      --accent-dark: #008080;
+      --border-color: rgba(0, 255, 255, 0.25);
+    }
+
+    .text-theme { color: var(--accent-color); }
+    .bg-theme { background-color: var(--accent-color); }
+    .border-theme { border-color: var(--accent-color); }
+    .shadow-theme { box-shadow: 0 0 25px var(--accent-glow); }
+
     /* Custom CSS for Smooth Animations & iOS Effects */
     body {
       background-color: #050507;
@@ -54,7 +73,7 @@
       user-select: none;
     }
 
-    /* Particle Canvas Background */
+    /* Background Canvas */
     #particles-canvas {
       position: fixed;
       top: 0;
@@ -70,40 +89,46 @@
       background: rgba(15, 15, 20, 0.6);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 0, 51, 0.2);
+      border: 1px solid var(--border-color);
     }
 
     .glass-modal {
       background: rgba(20, 20, 26, 0.88);
       backdrop-filter: blur(30px);
       -webkit-backdrop-filter: blur(30px);
-      border: 1px solid rgba(255, 0, 51, 0.3);
+      border: 1px solid var(--border-color);
     }
 
-    /* iOS Squircle Card */
+    /* iOS Squircle Row Card */
     .ios-squircle {
-      border-radius: 24px;
+      border-radius: 20px;
       transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
     }
 
     .ios-squircle:hover {
-      transform: translateY(-5px) scale(1.02);
-      border-color: rgba(255, 0, 51, 0.6);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.9), 0 0 25px rgba(255, 0, 51, 0.35);
+      transform: translateY(-3px) scale(1.01);
+      border-color: var(--accent-color);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.9), 0 0 20px var(--accent-glow);
     }
 
     /* Drag and Drop Styling */
     .dragging {
       opacity: 0.4 !important;
       transform: scale(0.95) !important;
-      border-color: #ff0033 !important;
-      box-shadow: 0 0 20px rgba(255, 0, 51, 0.8) !important;
+      border-color: var(--accent-color) !important;
+      box-shadow: 0 0 20px var(--accent-glow) !important;
     }
 
     .drag-over {
-      border-color: #ff0033 !important;
-      box-shadow: 0 0 25px rgba(255, 0, 51, 0.6) !important;
-      transform: scale(1.03) !important;
+      border-color: var(--accent-color) !important;
+      box-shadow: 0 0 25px var(--accent-glow) !important;
+      transform: scale(1.02) !important;
+    }
+
+    .folder-drag-over {
+      border-color: var(--accent-color) !important;
+      background: rgba(255, 255, 255, 0.1) !important;
+      box-shadow: 0 0 25px var(--accent-glow) !important;
     }
 
     /* Epic 3D Zoom Camera Effect on Click */
@@ -117,10 +142,10 @@
       0% {
         transform: scale(1) translateZ(0);
         opacity: 1;
-        box-shadow: 0 0 20px rgba(255, 0, 51, 0.5);
+        box-shadow: 0 0 20px var(--accent-glow);
       }
       50% {
-        box-shadow: 0 0 80px rgba(255, 0, 51, 0.9), 0 0 120px rgba(255, 0, 51, 0.6);
+        box-shadow: 0 0 80px var(--accent-color), 0 0 120px var(--accent-glow);
       }
       100% {
         transform: scale(14) translateZ(500px);
@@ -137,17 +162,17 @@
       background: #050507;
     }
     ::-webkit-scrollbar-thumb {
-      background: #80001a;
+      background: var(--accent-dark);
       border-radius: 10px;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: #ff0033;
+      background: var(--accent-color);
     }
   </style>
 </head>
-<body class="min-h-screen relative font-sans flex flex-col justify-between">
+<body class="min-h-screen relative font-sans flex flex-col justify-between" data-theme="red">
 
-  <!-- Interactive Particle Background -->
+  <!-- Canvas de Partículas y Velas Japonesas en vivo -->
   <canvas id="particles-canvas"></canvas>
 
   <!-- Notification Toast Container -->
@@ -156,49 +181,70 @@
   <!-- Header Section Centered -->
   <header class="relative z-10 pt-10 pb-6 px-4 flex flex-col items-center justify-center text-center">
     <div class="mb-4">
-      <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white drop-shadow-[0_0_20px_rgba(255,0,51,0.6)]">
-        My <span class="text-neon-red">Websites</span>
+      <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white drop-shadow-[0_0_20px_var(--accent-glow)]">
+        My <span class="text-theme">Websites</span>
       </h1>
-      <p class="text-xs sm:text-sm tracking-widest text-red-400/80 font-semibold uppercase mt-1">
+      <p class="text-xs sm:text-sm tracking-widest text-gray-400 font-semibold uppercase mt-1">
         By: <span class="text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]">YasmaStark</span>
       </p>
     </div>
 
-    <!-- Controls Bar: Icon-Only Buttons -->
-    <div class="flex items-center justify-center gap-4 mt-2">
+    <!-- Controls Bar: Theme Switcher & Actions -->
+    <div class="flex flex-wrap items-center justify-center gap-3 mt-2">
+      <!-- Selector de Temas -->
+      <div class="flex items-center glass-ios p-1 rounded-2xl border border-ios-border">
+        <button onclick="setTheme('red')" id="btn-theme-red" title="Tema Neón Rojo" class="w-10 h-10 rounded-xl flex items-center justify-center text-red-500 hover:bg-white/10 transition-all">
+          <i class="fa-solid fa-circle text-lg"></i>
+        </button>
+        <button onclick="setTheme('cyan')" id="btn-theme-cyan" title="Tema Neón Cyan" class="w-10 h-10 rounded-xl flex items-center justify-center text-cyan-400 hover:bg-white/10 transition-all">
+          <i class="fa-solid fa-circle text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Nueva Carpeta Button -->
+      <button onclick="openFolderModal()" title="Crear Carpeta" class="h-12 px-4 rounded-2xl glass-ios flex items-center gap-2 text-theme hover:text-white hover:bg-theme hover:shadow-neon-btn transition-all duration-300 font-semibold text-xs uppercase tracking-wider">
+        <i class="fa-solid fa-folder-plus text-base"></i>
+        <span class="hidden sm:inline">Carpeta</span>
+      </button>
+
       <!-- Guardar Backup Button -->
-      <button onclick="exportBackup()" title="Guardar backup" class="w-12 h-12 rounded-2xl glass-ios flex items-center justify-center text-neon-red hover:text-white hover:bg-neon-red hover:shadow-neon-btn transition-all duration-300">
+      <button onclick="exportBackup()" title="Guardar backup" class="w-12 h-12 rounded-2xl glass-ios flex items-center justify-center text-theme hover:text-white hover:bg-theme hover:shadow-neon-btn transition-all duration-300">
         <i class="fa-solid fa-floppy-disk text-lg"></i>
       </button>
 
       <!-- Cargar Backup Button -->
-      <button onclick="triggerImport()" title="Cargar backup" class="w-12 h-12 rounded-2xl glass-ios flex items-center justify-center text-neon-red hover:text-white hover:bg-neon-red hover:shadow-neon-btn transition-all duration-300">
+      <button onclick="triggerImport()" title="Cargar backup" class="w-12 h-12 rounded-2xl glass-ios flex items-center justify-center text-theme hover:text-white hover:bg-theme hover:shadow-neon-btn transition-all duration-300">
         <i class="fa-solid fa-file-import text-lg"></i>
       </button>
       <input type="file" id="import-file-input" accept=".json" class="hidden" onchange="importBackup(event)">
 
       <!-- Añadir Enlace (+) Button -->
-      <button onclick="openAddModal()" title="Añadir enlace" class="w-12 h-12 rounded-2xl glass-ios flex items-center justify-center text-neon-red hover:text-white hover:bg-neon-red hover:shadow-neon-btn transition-all duration-300">
+      <button onclick="openAddModal()" title="Añadir enlace" class="w-12 h-12 rounded-2xl glass-ios flex items-center justify-center text-theme hover:text-white hover:bg-theme hover:shadow-neon-btn transition-all duration-300">
         <i class="fa-solid fa-plus text-xl"></i>
       </button>
     </div>
   </header>
 
-  <!-- Main Website Grid / Container -->
+  <!-- Main Website Grid Container by Folders -->
   <main class="relative z-10 max-w-7xl mx-auto px-6 py-6 flex-grow w-full">
-    <!-- Grid View for Links -->
-    <div id="websites-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6"></div>
+    <!-- Folder View -->
+    <div id="folders-container" class="space-y-8"></div>
 
     <!-- Empty State Message -->
     <div id="empty-state" class="hidden flex-col items-center justify-center py-20 text-center">
-      <div class="w-24 h-24 rounded-full glass-ios flex items-center justify-center text-neon-red shadow-neon-glow mb-6 animate-pulse">
+      <div class="w-24 h-24 rounded-full glass-ios flex items-center justify-center text-theme shadow-neon-glow mb-6 animate-pulse">
         <i class="fa-solid fa-link-slash text-4xl"></i>
       </div>
-      <h2 class="text-2xl font-bold text-white mb-2">No tienes enlaces guardados</h2>
-      <p class="text-gray-400 max-w-md text-sm mb-6">Presiona el botón <span class="text-neon-red font-bold">( + )</span> de arriba para agregar tus sitios favoritos o subir un respaldo.</p>
-      <button onclick="openAddModal()" class="px-6 py-3 rounded-2xl bg-neon-red text-white font-semibold shadow-neon-btn hover:bg-red-600 transition-all flex items-center gap-2">
-        <i class="fa-solid fa-plus"></i> Añadir mi primer sitio
-      </button>
+      <h2 class="text-2xl font-bold text-white mb-2">No tienes enlaces ni carpetas guardadas</h2>
+      <p class="text-gray-400 max-w-md text-sm mb-6">Presiona <span class="text-theme font-bold">( + )</span> para añadir un enlace o <span class="text-theme font-bold">( + Carpeta )</span> para organizarte.</p>
+      <div class="flex gap-4">
+        <button onclick="openFolderModal()" class="px-5 py-3 rounded-2xl bg-white/10 text-white font-semibold hover:bg-white/20 transition-all flex items-center gap-2">
+          <i class="fa-solid fa-folder-plus"></i> Crear Carpeta
+        </button>
+        <button onclick="openAddModal()" class="px-6 py-3 rounded-2xl bg-theme text-white font-semibold shadow-neon-btn hover:opacity-90 transition-all flex items-center gap-2">
+          <i class="fa-solid fa-plus"></i> Añadir Sitio
+        </button>
+      </div>
     </div>
   </main>
 
@@ -206,6 +252,57 @@
   <footer class="relative z-10 py-6 text-center text-xs text-gray-500">
     <p>Powered by Neon iOS Glassmorphism Engine &bull; All data stored locally</p>
   </footer>
+
+  <!-- MODAL: Crear Nueva Carpeta -->
+  <div id="folder-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+    <div class="glass-modal w-full max-w-sm rounded-3xl p-6 shadow-neon-glow relative transform scale-95 transition-all duration-300" id="folder-modal-content">
+      <button onclick="closeFolderModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white text-xl w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition-all">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h3 class="text-xl font-bold text-white mb-1 flex items-center gap-3">
+        <i class="fa-solid fa-folder-plus text-theme"></i> Nueva Carpeta
+      </h3>
+      <p class="text-xs text-gray-400 mb-5">Ingresa el nombre para la nueva categoría.</p>
+
+      <form id="folder-form" onsubmit="handleCreateFolder(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Nombre de la Carpeta</label>
+          <input type="text" id="new-folder-name" required placeholder="Ej: Trading, Personal, Redes..." class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-theme transition-all">
+        </div>
+
+        <button type="submit" class="w-full py-3.5 rounded-xl bg-theme text-white font-bold tracking-wide shadow-neon-btn hover:opacity-90 transition-all flex items-center justify-center gap-2 mt-2">
+          <i class="fa-solid fa-check"></i> Crear Carpeta
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Editar Nombre de Carpeta -->
+  <div id="edit-folder-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+    <div class="glass-modal w-full max-w-sm rounded-3xl p-6 shadow-neon-glow relative transform scale-95 transition-all duration-300" id="edit-folder-modal-content">
+      <button onclick="closeEditFolderModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white text-xl w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition-all">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h3 class="text-xl font-bold text-white mb-1 flex items-center gap-3">
+        <i class="fa-solid fa-pen-to-square text-theme"></i> Editar Carpeta
+      </h3>
+      <p class="text-xs text-gray-400 mb-5">Modifica el nombre de la carpeta seleccionada.</p>
+
+      <form id="edit-folder-form" onsubmit="handleEditFolder(event)" class="space-y-4">
+        <input type="hidden" id="old-folder-name">
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Nuevo Nombre</label>
+          <input type="text" id="edit-folder-name" required placeholder="Ej: Trading, Personal..." class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-theme transition-all">
+        </div>
+
+        <button type="submit" class="w-full py-3.5 rounded-xl bg-theme text-white font-bold tracking-wide shadow-neon-btn hover:opacity-90 transition-all flex items-center justify-center gap-2 mt-2">
+          <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
+        </button>
+      </form>
+    </div>
+  </div>
 
   <!-- MODAL: Añadir Enlace -->
   <div id="add-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
@@ -215,27 +312,33 @@
       </button>
 
       <h3 class="text-2xl font-bold text-white mb-1 flex items-center gap-3">
-        <i class="fa-solid fa-plus-circle text-neon-red"></i> Agregar Enlace
+        <i class="fa-solid fa-plus-circle text-theme"></i> Agregar Enlace
       </h3>
       <p class="text-xs text-gray-400 mb-6">Completa los datos para crear un nuevo acceso directo.</p>
 
       <form id="add-form" onsubmit="handleAddWebsite(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Nombre del Sitio</label>
-          <input type="text" id="site-name" required placeholder="Ej: YouTube, GitHub..." class="w-full bg-black/60 border border-red-900/50 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-neon-red focus:ring-1 focus:ring-neon-red transition-all">
+          <input type="text" id="site-name" required placeholder="Ej: YouTube, GitHub..." class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-theme transition-all">
         </div>
 
         <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">URL Web</label>
-          <input type="url" id="site-url" required placeholder="https://ejemplo.com" class="w-full bg-black/60 border border-red-900/50 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-neon-red focus:ring-1 focus:ring-neon-red transition-all">
+          <input type="url" id="site-url" required placeholder="https://ejemplo.com" class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-theme transition-all">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Carpeta / Categoría</label>
+          <input type="text" id="site-folder" placeholder="Ej: General, Redes, Trading..." class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-theme transition-all" list="folder-suggestions">
+          <datalist id="folder-suggestions"></datalist>
         </div>
 
         <!-- Selector de Tipo de Icono -->
         <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Tipo de Icono</label>
           <div class="grid grid-cols-2 gap-2 mb-3">
-            <button type="button" id="tab-file-btn" onclick="switchIconTab('file')" class="py-2 rounded-xl text-xs font-semibold border border-neon-red bg-neon-red/20 text-white transition-all">
-              <i class="fa-solid fa-upload mr-1"></i> Archivo SVG/PC
+            <button type="button" id="tab-file-btn" onclick="switchIconTab('file')" class="py-2 rounded-xl text-xs font-semibold border border-theme bg-theme/20 text-white transition-all">
+              <i class="fa-solid fa-upload mr-1"></i> Imagen / Icono PC
             </button>
             <button type="button" id="tab-fa-btn" onclick="switchIconTab('fa')" class="py-2 rounded-xl text-xs font-semibold border border-gray-800 bg-black/40 text-gray-400 transition-all">
               <i class="fa-solid fa-icons mr-1"></i> FontAwesome / Emoji
@@ -244,28 +347,28 @@
 
           <!-- Input Archivo SVG/Imagen -->
           <div id="icon-file-container" class="space-y-2">
-            <input type="file" id="site-file" accept=".svg, .png, .jpg, .jpeg, .webp" onchange="previewUploadedFile(event)" class="w-full text-xs text-gray-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-neon-red/20 file:text-neon-red hover:file:bg-neon-red hover:file:text-white transition-all cursor-pointer">
-            <p class="text-[10px] text-gray-500">Formatos recomendados: .SVG, .PNG o .WEBP transparentes.</p>
+            <input type="file" id="site-file" accept="image/*, .ico, .svg" onchange="previewUploadedFile(event)" class="w-full text-xs text-gray-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-theme/20 file:text-theme hover:file:bg-theme hover:file:text-white transition-all cursor-pointer">
+            <p class="text-[10px] text-gray-500">Admite todos los formatos: .PNG, .JPG, .ICO, .SVG, .WEBP, etc.</p>
           </div>
 
           <!-- Input FontAwesome / Emoji -->
           <div id="icon-fa-container" class="hidden space-y-2">
-            <input type="text" id="site-icon-fa" placeholder="Ej: fa-brands fa-youtube o 🚀" class="w-full bg-black/60 border border-red-900/50 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-neon-red focus:ring-1 focus:ring-neon-red transition-all">
+            <input type="text" id="site-icon-fa" placeholder="Ej: fa-brands fa-youtube o 🚀" class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-theme transition-all">
           </div>
         </div>
 
         <!-- Preview del Icono -->
-        <div id="icon-preview-box" class="hidden flex items-center gap-3 p-3 bg-black/40 rounded-xl border border-red-900/30">
+        <div id="icon-preview-box" class="hidden flex items-center gap-3 p-3 bg-black/40 rounded-xl border border-gray-800">
           <span class="text-xs text-gray-400">Vista previa:</span>
-          <div id="icon-preview-target" class="w-8 h-8 flex items-center justify-center text-neon-red text-xl"></div>
+          <div id="icon-preview-target" class="w-10 h-10 flex items-center justify-center text-theme text-2xl"></div>
         </div>
 
         <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Descripción</label>
-          <textarea id="site-desc" rows="3" placeholder="Ingresa una breve descripción..." class="w-full bg-black/60 border border-red-900/50 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-neon-red focus:ring-1 focus:ring-neon-red transition-all text-sm resize-none"></textarea>
+          <textarea id="site-desc" rows="3" placeholder="Ingresa una breve descripción..." class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-theme transition-all text-sm resize-none"></textarea>
         </div>
 
-        <button type="submit" class="w-full py-3.5 rounded-xl bg-neon-red text-white font-bold tracking-wide shadow-neon-btn hover:bg-red-600 transition-all flex items-center justify-center gap-2 mt-4">
+        <button type="submit" class="w-full py-3.5 rounded-xl bg-theme text-white font-bold tracking-wide shadow-neon-btn hover:opacity-90 transition-all flex items-center justify-center gap-2 mt-4">
           <i class="fa-solid fa-check"></i> Añadir Acceso Directo
         </button>
       </form>
@@ -280,28 +383,33 @@
       </button>
 
       <h3 class="text-2xl font-bold text-white mb-1 flex items-center gap-3">
-        <i class="fa-solid fa-pen-to-square text-neon-red"></i> Editar Enlace
+        <i class="fa-solid fa-pen-to-square text-theme"></i> Editar Enlace
       </h3>
       <p class="text-xs text-gray-400 mb-6">Modifica la información del acceso directo seleccionado.</p>
 
       <form id="edit-form" onsubmit="handleEditWebsite(event)" class="space-y-4">
-        <input type="hidden" id="edit-site-index">
+        <input type="hidden" id="edit-site-id">
         <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Nombre del Sitio</label>
-          <input type="text" id="edit-site-name" required placeholder="Ej: YouTube, GitHub..." class="w-full bg-black/60 border border-red-900/50 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-neon-red focus:ring-1 focus:ring-neon-red transition-all">
+          <input type="text" id="edit-site-name" required placeholder="Ej: YouTube, GitHub..." class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-theme transition-all">
         </div>
 
         <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">URL Web</label>
-          <input type="url" id="edit-site-url" required placeholder="https://ejemplo.com" class="w-full bg-black/60 border border-red-900/50 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-neon-red focus:ring-1 focus:ring-neon-red transition-all">
+          <input type="url" id="edit-site-url" required placeholder="https://ejemplo.com" class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-theme transition-all">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Carpeta / Categoría</label>
+          <input type="text" id="edit-site-folder" placeholder="Ej: General, Redes, Trading..." class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-theme transition-all" list="folder-suggestions">
         </div>
 
         <!-- Selector de Tipo de Icono para Editar -->
         <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Tipo de Icono</label>
           <div class="grid grid-cols-2 gap-2 mb-3">
-            <button type="button" id="edit-tab-file-btn" onclick="switchEditIconTab('file')" class="py-2 rounded-xl text-xs font-semibold border border-neon-red bg-neon-red/20 text-white transition-all">
-              <i class="fa-solid fa-upload mr-1"></i> Archivo SVG/PC
+            <button type="button" id="edit-tab-file-btn" onclick="switchEditIconTab('file')" class="py-2 rounded-xl text-xs font-semibold border border-theme bg-theme/20 text-white transition-all">
+              <i class="fa-solid fa-upload mr-1"></i> Imagen / Icono PC
             </button>
             <button type="button" id="edit-tab-fa-btn" onclick="switchEditIconTab('fa')" class="py-2 rounded-xl text-xs font-semibold border border-gray-800 bg-black/40 text-gray-400 transition-all">
               <i class="fa-solid fa-icons mr-1"></i> FontAwesome / Emoji
@@ -310,28 +418,28 @@
 
           <!-- Input Archivo SVG/Imagen Editar -->
           <div id="edit-icon-file-container" class="space-y-2">
-            <input type="file" id="edit-site-file" accept=".svg, .png, .jpg, .jpeg, .webp" onchange="previewEditUploadedFile(event)" class="w-full text-xs text-gray-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-neon-red/20 file:text-neon-red hover:file:bg-neon-red hover:file:text-white transition-all cursor-pointer">
+            <input type="file" id="edit-site-file" accept="image/*, .ico, .svg" onchange="previewEditUploadedFile(event)" class="w-full text-xs text-gray-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-theme/20 file:text-theme hover:file:bg-theme hover:file:text-white transition-all cursor-pointer">
             <p class="text-[10px] text-gray-500">Deja vacío si prefieres conservar el archivo de icono actual.</p>
           </div>
 
           <!-- Input FontAwesome / Emoji Editar -->
           <div id="edit-icon-fa-container" class="hidden space-y-2">
-            <input type="text" id="edit-site-icon-fa" placeholder="Ej: fa-brands fa-youtube o 🚀" class="w-full bg-black/60 border border-red-900/50 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-neon-red focus:ring-1 focus:ring-neon-red transition-all">
+            <input type="text" id="edit-site-icon-fa" placeholder="Ej: fa-brands fa-youtube o 🚀" class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-theme transition-all">
           </div>
         </div>
 
         <!-- Preview del Icono en Edición -->
-        <div id="edit-icon-preview-box" class="flex items-center gap-3 p-3 bg-black/40 rounded-xl border border-red-900/30">
+        <div id="edit-icon-preview-box" class="flex items-center gap-3 p-3 bg-black/40 rounded-xl border border-gray-800">
           <span class="text-xs text-gray-400">Vista previa:</span>
-          <div id="edit-icon-preview-target" class="w-8 h-8 flex items-center justify-center text-neon-red text-xl"></div>
+          <div id="edit-icon-preview-target" class="w-10 h-10 flex items-center justify-center text-theme text-2xl"></div>
         </div>
 
         <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Descripción</label>
-          <textarea id="edit-site-desc" rows="3" placeholder="Ingresa una breve descripción..." class="w-full bg-black/60 border border-red-900/50 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-neon-red focus:ring-1 focus:ring-neon-red transition-all text-sm resize-none"></textarea>
+          <textarea id="edit-site-desc" rows="3" placeholder="Ingresa una breve descripción..." class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-theme transition-all text-sm resize-none"></textarea>
         </div>
 
-        <button type="submit" class="w-full py-3.5 rounded-xl bg-neon-red text-white font-bold tracking-wide shadow-neon-btn hover:bg-red-600 transition-all flex items-center justify-center gap-2 mt-4">
+        <button type="submit" class="w-full py-3.5 rounded-xl bg-theme text-white font-bold tracking-wide shadow-neon-btn hover:opacity-90 transition-all flex items-center justify-center gap-2 mt-4">
           <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
         </button>
       </form>
@@ -345,11 +453,11 @@
         <i class="fa-solid fa-xmark"></i>
       </button>
 
-      <div id="desc-modal-icon" class="w-16 h-16 mx-auto mb-4 rounded-2xl glass-ios flex items-center justify-center text-neon-red text-3xl shadow-neon-glow"></div>
+      <div id="desc-modal-icon" class="w-20 h-20 mx-auto mb-4 rounded-2xl glass-ios flex items-center justify-center text-theme text-4xl shadow-neon-glow"></div>
       <h3 id="desc-modal-title" class="text-xl font-bold text-white mb-2"></h3>
-      <p id="desc-modal-text" class="text-sm text-gray-300 leading-relaxed bg-black/40 p-4 rounded-2xl border border-red-900/30 max-h-48 overflow-y-auto text-left"></p>
+      <p id="desc-modal-text" class="text-sm text-gray-300 leading-relaxed bg-black/40 p-4 rounded-2xl border border-gray-800 max-h-48 overflow-y-auto text-left"></p>
 
-      <button onclick="closeDescModal()" class="w-full mt-5 py-2.5 rounded-xl bg-white/10 text-white font-semibold hover:bg-neon-red transition-all">
+      <button onclick="closeDescModal()" class="w-full mt-5 py-2.5 rounded-xl bg-white/10 text-white font-semibold hover:bg-theme transition-all">
         Cerrar
       </button>
     </div>
@@ -357,29 +465,72 @@
 
   <!-- JavaScript Code Base -->
   <script>
-    // State Array
     let websites = [];
+    let customFolders = [];
+    let currentTheme = 'red';
+    let collapsedFolders = {};
+
     let currentIconType = 'file';
     let uploadedIconData = '';
 
     let editIconType = 'file';
     let editUploadedIconData = '';
 
-    // Drag and Drop Variables
-    let draggedIndex = null;
+    let draggedId = null;
 
     // Initialize Page
     document.addEventListener('DOMContentLoaded', () => {
-      initParticles();
+      loadTheme();
+      initBackgroundCanvas();
       loadWebsites();
     });
 
-    // Load Websites from LocalStorage
+    // Theme Selector System
+    function setTheme(theme) {
+      currentTheme = theme;
+      document.body.setAttribute('data-theme', theme);
+      localStorage.setItem('yasma_my_websites_theme', theme);
+      
+      const redBtn = document.getElementById('btn-theme-red');
+      const cyanBtn = document.getElementById('btn-theme-cyan');
+
+      if (theme === 'cyan') {
+        cyanBtn.classList.add('bg-white/20');
+        redBtn.classList.remove('bg-white/20');
+      } else {
+        redBtn.classList.add('bg-white/20');
+        cyanBtn.classList.remove('bg-white/20');
+      }
+
+      renderWebsites();
+    }
+
+    function loadTheme() {
+      const savedTheme = localStorage.getItem('yasma_my_websites_theme') || 'red';
+      setTheme(savedTheme);
+    }
+
+    // Load Websites & Folders from LocalStorage
     function loadWebsites() {
       const stored = localStorage.getItem('yasma_my_websites');
+      const storedFolders = localStorage.getItem('yasma_my_websites_folders');
+      const storedCollapsed = localStorage.getItem('yasma_my_websites_collapsed');
+      
+      if (storedCollapsed) {
+        try { collapsedFolders = JSON.parse(storedCollapsed); } catch(e) { collapsedFolders = {}; }
+      }
+
+      if (storedFolders) {
+        try { customFolders = JSON.parse(storedFolders); } catch(e) { customFolders = []; }
+      }
+
       if (stored) {
         try {
           websites = JSON.parse(stored);
+          websites.forEach((item, idx) => {
+            if (!item.id) item.id = 'site_' + Date.now() + '_' + idx;
+            if (!item.folder) item.folder = 'General';
+          });
         } catch(e) {
           websites = [];
         }
@@ -389,105 +540,278 @@
       renderWebsites();
     }
 
-    // Save Websites to LocalStorage
+    // Save Data to LocalStorage
     function saveWebsites() {
       localStorage.setItem('yasma_my_websites', JSON.stringify(websites));
+      localStorage.setItem('yasma_my_websites_folders', JSON.stringify(customFolders));
+      localStorage.setItem('yasma_my_websites_collapsed', JSON.stringify(collapsedFolders));
       renderWebsites();
     }
 
-    // Render Grid Cards
+    function toggleFolder(folderName) {
+      collapsedFolders[folderName] = !collapsedFolders[folderName];
+      saveWebsites();
+    }
+
+    // --- FOLDER MODAL CONTROLS (CREAR, EDITAR Y ELIMINAR) ---
+    function openFolderModal() {
+      const modal = document.getElementById('folder-modal');
+      const content = document.getElementById('folder-modal-content');
+      modal.classList.remove('pointer-events-none');
+      modal.classList.add('opacity-100');
+      content.classList.remove('scale-95');
+      content.classList.add('scale-100');
+      document.getElementById('new-folder-name').focus();
+    }
+
+    function closeFolderModal() {
+      const modal = document.getElementById('folder-modal');
+      const content = document.getElementById('folder-modal-content');
+      modal.classList.add('pointer-events-none');
+      modal.classList.remove('opacity-100');
+      content.classList.add('scale-95');
+      content.classList.remove('scale-100');
+      document.getElementById('folder-form').reset();
+    }
+
+    function handleCreateFolder(e) {
+      e.preventDefault();
+      const folderName = document.getElementById('new-folder-name').value.trim();
+      if (!folderName) return;
+
+      if (!customFolders.includes(folderName)) {
+        customFolders.push(folderName);
+        saveWebsites();
+        showToast(`Carpeta "${folderName}" creada`);
+      } else {
+        showToast('La carpeta ya existe', 'error');
+      }
+      closeFolderModal();
+    }
+
+    function openEditFolderModal(folderName) {
+      document.getElementById('old-folder-name').value = folderName;
+      document.getElementById('edit-folder-name').value = folderName;
+
+      const modal = document.getElementById('edit-folder-modal');
+      const content = document.getElementById('edit-folder-modal-content');
+      modal.classList.remove('pointer-events-none');
+      modal.classList.add('opacity-100');
+      content.classList.remove('scale-95');
+      content.classList.add('scale-100');
+      document.getElementById('edit-folder-name').focus();
+    }
+
+    function closeEditFolderModal() {
+      const modal = document.getElementById('edit-folder-modal');
+      const content = document.getElementById('edit-folder-modal-content');
+      modal.classList.add('pointer-events-none');
+      modal.classList.remove('opacity-100');
+      content.classList.add('scale-95');
+      content.classList.remove('scale-100');
+      document.getElementById('edit-folder-form').reset();
+    }
+
+    function handleEditFolder(e) {
+      e.preventDefault();
+      const oldName = document.getElementById('old-folder-name').value;
+      const newName = document.getElementById('edit-folder-name').value.trim();
+
+      if (!newName || oldName === newName) {
+        closeEditFolderModal();
+        return;
+      }
+
+      // Actualizar en customFolders
+      const folderIdx = customFolders.indexOf(oldName);
+      if (folderIdx !== -1) {
+        customFolders[folderIdx] = newName;
+      } else {
+        customFolders.push(newName);
+      }
+
+      // Actualizar en sitios existentes
+      websites.forEach(item => {
+        if (item.folder === oldName) {
+          item.folder = newName;
+        }
+      });
+
+      // Actualizar estado colapsado
+      if (collapsedFolders[oldName] !== undefined) {
+        collapsedFolders[newName] = collapsedFolders[oldName];
+        delete collapsedFolders[oldName];
+      }
+
+      saveWebsites();
+      closeEditFolderModal();
+      showToast(`Carpeta renombrada a "${newName}"`);
+    }
+
+    function deleteFolder(folderName) {
+      if (confirm(`¿Eliminar la carpeta "${folderName}"? Sus accesos directos pasarán automáticamente a "General".`)) {
+        customFolders = customFolders.filter(f => f !== folderName);
+        websites.forEach(item => {
+          if (item.folder === folderName) {
+            item.folder = 'General';
+          }
+        });
+        delete collapsedFolders[folderName];
+        saveWebsites();
+        showToast(`Carpeta "${folderName}" eliminada.`);
+      }
+    }
+
+    // Render Websites grouped by Folders in LIST VIEW WITH LARGER ICONS
     function renderWebsites() {
-      const grid = document.getElementById('websites-grid');
+      const container = document.getElementById('folders-container');
       const emptyState = document.getElementById('empty-state');
+      const datalist = document.getElementById('folder-suggestions');
 
-      grid.innerHTML = '';
+      container.innerHTML = '';
+      datalist.innerHTML = '';
 
-      if (websites.length === 0) {
+      const folderSet = new Set([...customFolders, ...websites.map(item => item.folder || 'General')]);
+      if (folderSet.size === 0 && websites.length === 0) {
+        folderSet.add('General');
+      }
+      
+      const folders = [...folderSet];
+
+      if (folders.length === 0 && websites.length === 0) {
         emptyState.classList.remove('hidden');
         emptyState.classList.add('flex');
-        grid.classList.add('hidden');
+        container.classList.add('hidden');
         return;
       }
 
       emptyState.classList.add('hidden');
       emptyState.classList.remove('flex');
-      grid.classList.remove('hidden');
+      container.classList.remove('hidden');
 
-      websites.forEach((item, index) => {
-        const card = document.createElement('div');
-        card.className = 'relative group ios-squircle glass-ios p-5 flex flex-col items-center justify-between cursor-grab active:cursor-grabbing border border-neon-border hover:border-neon-red transition-all duration-300';
-        
-        // Drag and Drop Attributes & Event Listeners
-        card.setAttribute('draggable', 'true');
-        card.setAttribute('data-index', index);
+      folders.forEach(f => {
+        const option = document.createElement('option');
+        option.value = f;
+        datalist.appendChild(option);
+      });
 
-        card.addEventListener('dragstart', handleDragStart);
-        card.addEventListener('dragover', handleDragOver);
-        card.addEventListener('dragenter', handleDragEnter);
-        card.addEventListener('dragleave', handleDragLeave);
-        card.addEventListener('drop', handleDrop);
-        card.addEventListener('dragend', handleDragEnd);
+      folders.forEach(folderName => {
+        const folderItems = websites.filter(item => (item.folder || 'General') === folderName);
+        const isCollapsed = !!collapsedFolders[folderName];
 
-        // Icon rendering
-        let iconMarkup = '';
-        if (item.iconType === 'file' && item.iconValue) {
-          iconMarkup = `<img src="${item.iconValue}" alt="${item.name}" class="w-12 h-12 object-contain filter drop-shadow-[0_0_8px_rgba(255,0,51,0.5)]">`;
-        } else if (item.iconValue && item.iconValue.startsWith('fa-')) {
-          iconMarkup = `<i class="${item.iconValue} text-3xl text-neon-red filter drop-shadow-[0_0_8px_rgba(255,0,51,0.6)]"></i>`;
-        } else if (item.iconValue) {
-          iconMarkup = `<span class="text-3xl">${item.iconValue}</span>`;
-        } else {
-          iconMarkup = `<i class="fa-solid fa-globe text-3xl text-neon-red"></i>`;
-        }
+        const folderSection = document.createElement('div');
+        folderSection.className = 'glass-ios rounded-3xl p-6 transition-all duration-300';
+        folderSection.setAttribute('data-folder', folderName);
 
-        card.innerHTML = `
-          <!-- Card Actions: Edit & Delete -->
-          <div class="absolute top-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20">
-            <button onclick="event.stopPropagation(); openEditModal(${index});" title="Editar" class="text-gray-400 hover:text-white transition-colors">
-              <i class="fa-solid fa-pen-to-square text-sm"></i>
-            </button>
-            <button onclick="event.stopPropagation(); deleteWebsite(${index});" title="Eliminar" class="text-gray-500 hover:text-neon-red transition-colors">
-              <i class="fa-solid fa-trash-can text-sm"></i>
-            </button>
-          </div>
+        folderSection.addEventListener('dragover', handleFolderDragOver);
+        folderSection.addEventListener('dragenter', handleFolderDragEnter);
+        folderSection.addEventListener('dragleave', handleFolderDragLeave);
+        folderSection.addEventListener('drop', handleFolderDrop);
 
-          <!-- Card Content with Link -->
-          <div onclick="launchWebsite('${item.url}', this)" class="w-full flex flex-col items-center pt-2 pb-1">
-            <div class="w-16 h-16 rounded-2xl glass-ios flex items-center justify-center mb-3 shadow-neon-glow group-hover:scale-110 transition-transform duration-300">
-              ${iconMarkup}
+        folderSection.innerHTML = `
+          <div onclick="toggleFolder('${folderName}')" class="flex items-center justify-between cursor-pointer select-none pb-2 border-b border-gray-800/80 mb-4">
+            <div class="flex items-center gap-3">
+              <i class="fa-solid ${isCollapsed ? 'fa-folder' : 'fa-folder-open'} text-theme text-xl"></i>
+              <h2 class="text-xl font-bold text-white tracking-wide">${folderName}</h2>
+              <span class="text-xs text-gray-400 bg-white/10 px-2.5 py-0.5 rounded-full font-medium">${folderItems.length}</span>
             </div>
-            <h3 class="text-sm font-bold text-white text-center truncate w-full px-1">${item.name}</h3>
+            <!-- Acciones de Carpeta: Editar y Eliminar -->
+            <div class="flex items-center gap-2">
+              <button onclick="event.stopPropagation(); openEditFolderModal('${folderName}');" title="Editar carpeta" class="text-gray-400 hover:text-white transition-colors text-sm px-2 py-1">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              ${folderName !== 'General' ? `
+                <button onclick="event.stopPropagation(); deleteFolder('${folderName}');" title="Eliminar carpeta" class="text-gray-500 hover:text-theme transition-colors text-sm px-2 py-1">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              ` : ''}
+              <i class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-300 ${isCollapsed ? '-rotate-90' : ''} ml-1"></i>
+            </div>
           </div>
-
-          <!-- Dedicated Description Button -->
-          <button onclick="event.stopPropagation(); openDescModal(${index});" class="mt-3 text-[11px] font-semibold text-red-400 hover:text-white bg-neon-red/10 hover:bg-neon-red px-3 py-1 rounded-full border border-neon-red/30 transition-all duration-200 flex items-center gap-1">
-            <i class="fa-solid fa-circle-info text-[10px]"></i> Ver descripción
-          </button>
+          <!-- Grid Responsivo de 1 Columna (Móvil), 2 Columnas (Tablet/Medio), 3 Columnas (Pantalla Ancha) -->
+          <div class="folder-grid grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 min-h-[50px] ${isCollapsed ? 'hidden' : ''}" id="folder-grid-${folderName}">
+            ${folderItems.length === 0 ? '<div class="col-span-full text-center py-4 text-xs text-gray-500 border border-dashed border-gray-800 rounded-2xl">Arrastra sitios aquí para añadirlos a esta carpeta</div>' : ''}
+          </div>
         `;
 
-        grid.appendChild(card);
+        container.appendChild(folderSection);
+
+        const grid = folderSection.querySelector(`#folder-grid-${CSS.escape(folderName)}`);
+
+        folderItems.forEach((item) => {
+          const card = document.createElement('div');
+          // Vista Lista con Icono Más Grande (w-16 h-16)
+          card.className = 'relative group ios-squircle glass-ios p-4 flex items-center justify-between cursor-grab active:cursor-grabbing border border-ios-border hover:border-theme transition-all duration-300 w-full min-w-0';
+          
+          card.setAttribute('draggable', 'true');
+          card.setAttribute('data-id', item.id);
+
+          card.addEventListener('dragstart', handleDragStart);
+          card.addEventListener('dragover', handleDragOver);
+          card.addEventListener('dragenter', handleDragEnter);
+          card.addEventListener('dragleave', handleDragLeave);
+          card.addEventListener('drop', handleDrop);
+          card.addEventListener('dragend', handleDragEnd);
+
+          // Iconos ampliados (w-10 h-10 para imágenes y text-3xl para fuentes)
+          let iconMarkup = '';
+          if (item.iconType === 'file' && item.iconValue) {
+            iconMarkup = `<img src="${item.iconValue}" alt="${item.name}" class="w-10 h-10 object-contain filter drop-shadow-[0_0_8px_var(--accent-glow)]">`;
+          } else if (item.iconValue && item.iconValue.startsWith('fa-')) {
+            iconMarkup = `<i class="${item.iconValue} text-3xl text-theme filter drop-shadow-[0_0_8px_var(--accent-glow)]"></i>`;
+          } else if (item.iconValue) {
+            iconMarkup = `<span class="text-3xl">${item.iconValue}</span>`;
+          } else {
+            iconMarkup = `<i class="fa-solid fa-globe text-3xl text-theme"></i>`;
+          }
+
+          card.innerHTML = `
+            <!-- Click para Lanzar Sitio (Icono de 16x16 + Nombre Completo en break-words) -->
+            <div onclick="launchWebsite('${item.url}', this)" class="flex items-center gap-4 flex-grow min-w-0 cursor-pointer pr-2">
+              <div class="w-16 h-16 rounded-2xl glass-ios flex-shrink-0 flex items-center justify-center shadow-neon-glow group-hover:scale-105 transition-transform duration-300">
+                ${iconMarkup}
+              </div>
+              <div class="flex flex-col min-w-0 flex-grow">
+                <h3 class="text-base font-bold text-white break-words leading-snug">${item.name}</h3>
+              </div>
+            </div>
+
+            <!-- Botones de Acción a la Derecha -->
+            <div class="flex items-center gap-2 flex-shrink-0">
+              <button onclick="event.stopPropagation(); openDescModal('${item.id}');" title="Ver descripción" class="text-theme hover:text-white bg-theme/10 hover:bg-theme w-8 h-8 rounded-xl border border-theme/30 transition-all flex items-center justify-center">
+                <i class="fa-solid fa-circle-info text-xs"></i>
+              </button>
+              <button onclick="event.stopPropagation(); openEditModal('${item.id}');" title="Editar enlace" class="text-gray-400 hover:text-white w-8 h-8 rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center">
+                <i class="fa-solid fa-pen-to-square text-xs"></i>
+              </button>
+              <button onclick="event.stopPropagation(); deleteWebsite('${item.id}');" title="Eliminar enlace" class="text-gray-500 hover:text-theme w-8 h-8 rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center">
+                <i class="fa-solid fa-trash-can text-xs"></i>
+              </button>
+            </div>
+          `;
+
+          grid.appendChild(card);
+        });
       });
     }
 
-    // --- Drag and Drop Handlers ---
+    // --- Drag and Drop Handlers (Tarjetas) ---
     function handleDragStart(e) {
-      draggedIndex = parseInt(this.getAttribute('data-index'), 10);
+      draggedId = this.getAttribute('data-id');
       e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('text/plain', draggedIndex);
+      e.dataTransfer.setData('text/plain', draggedId);
       this.classList.add('dragging');
     }
 
     function handleDragOver(e) {
-      if (e.preventDefault) {
-        e.preventDefault();
-      }
+      if (e.preventDefault) e.preventDefault();
       e.dataTransfer.dropEffect = 'move';
       return false;
     }
 
     function handleDragEnter(e) {
-      const targetIndex = parseInt(this.getAttribute('data-index'), 10);
-      if (targetIndex !== draggedIndex) {
+      const targetId = this.getAttribute('data-id');
+      if (targetId !== draggedId) {
         this.classList.add('drag-over');
       }
     }
@@ -497,29 +821,60 @@
     }
 
     function handleDrop(e) {
-      if (e.stopPropagation) {
-        e.stopPropagation();
-      }
-      
-      const targetIndex = parseInt(this.getAttribute('data-index'), 10);
+      if (e.stopPropagation) e.stopPropagation();
+      const targetId = this.getAttribute('data-id');
 
-      if (draggedIndex !== null && draggedIndex !== targetIndex) {
-        // Reorganizar array de enlaces
-        const draggedItem = websites.splice(draggedIndex, 1)[0];
-        websites.splice(targetIndex, 0, draggedItem);
-        saveWebsites();
-        showToast('¡Orden actualizado!');
-      }
+      if (draggedId && draggedId !== targetId) {
+        const fromIndex = websites.findIndex(w => w.id === draggedId);
+        const toIndex = websites.findIndex(w => w.id === targetId);
 
+        if (fromIndex !== -1 && toIndex !== -1) {
+          const draggedItem = websites.splice(fromIndex, 1)[0];
+          draggedItem.folder = websites[toIndex].folder;
+          websites.splice(toIndex, 0, draggedItem);
+          saveWebsites();
+          showToast('¡Orden actualizado!');
+        }
+      }
       return false;
     }
 
     function handleDragEnd(e) {
       this.classList.remove('dragging');
-      document.querySelectorAll('.ios-squircle').forEach(card => {
-        card.classList.remove('drag-over');
-      });
-      draggedIndex = null;
+      document.querySelectorAll('.ios-squircle').forEach(card => card.classList.remove('drag-over'));
+      document.querySelectorAll('[data-folder]').forEach(folder => folder.classList.remove('folder-drag-over'));
+      draggedId = null;
+    }
+
+    // --- Drag and Drop Handlers (Carpeta) ---
+    function handleFolderDragOver(e) {
+      if (e.preventDefault) e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      return false;
+    }
+
+    function handleFolderDragEnter(e) {
+      this.classList.add('folder-drag-over');
+    }
+
+    function handleFolderDragLeave(e) {
+      this.classList.remove('folder-drag-over');
+    }
+
+    function handleFolderDrop(e) {
+      if (e.stopPropagation) e.stopPropagation();
+      this.classList.remove('folder-drag-over');
+      
+      const targetFolder = this.getAttribute('data-folder');
+      if (draggedId && targetFolder) {
+        const item = websites.find(w => w.id === draggedId);
+        if (item && item.folder !== targetFolder) {
+          item.folder = targetFolder;
+          saveWebsites();
+          showToast(`Movido a "${targetFolder}"`);
+        }
+      }
+      return false;
     }
 
     // Launch Website with 3D Zoom Effect
@@ -529,13 +884,11 @@
 
       setTimeout(() => {
         window.open(url, '_blank');
-        setTimeout(() => {
-          card.classList.remove('launching-zoom');
-        }, 500);
+        setTimeout(() => card.classList.remove('launching-zoom'), 500);
       }, 500);
     }
 
-    // Switch Icon Tabs in Add Modal
+    // Icon Switch Logic
     function switchIconTab(type) {
       currentIconType = type;
       const fileBtn = document.getElementById('tab-file-btn');
@@ -544,19 +897,18 @@
       const faContainer = document.getElementById('icon-fa-container');
 
       if (type === 'file') {
-        fileBtn.className = 'py-2 rounded-xl text-xs font-semibold border border-neon-red bg-neon-red/20 text-white transition-all';
+        fileBtn.className = 'py-2 rounded-xl text-xs font-semibold border border-theme bg-theme/20 text-white transition-all';
         faBtn.className = 'py-2 rounded-xl text-xs font-semibold border border-gray-800 bg-black/40 text-gray-400 transition-all';
         fileContainer.classList.remove('hidden');
         faContainer.classList.add('hidden');
       } else {
-        faBtn.className = 'py-2 rounded-xl text-xs font-semibold border border-neon-red bg-neon-red/20 text-white transition-all';
+        faBtn.className = 'py-2 rounded-xl text-xs font-semibold border border-theme bg-theme/20 text-white transition-all';
         fileBtn.className = 'py-2 rounded-xl text-xs font-semibold border border-gray-800 bg-black/40 text-gray-400 transition-all';
         faContainer.classList.remove('hidden');
         fileContainer.classList.add('hidden');
       }
     }
 
-    // Switch Icon Tabs in Edit Modal
     function switchEditIconTab(type) {
       editIconType = type;
       const fileBtn = document.getElementById('edit-tab-file-btn');
@@ -565,12 +917,12 @@
       const faContainer = document.getElementById('edit-icon-fa-container');
 
       if (type === 'file') {
-        fileBtn.className = 'py-2 rounded-xl text-xs font-semibold border border-neon-red bg-neon-red/20 text-white transition-all';
+        fileBtn.className = 'py-2 rounded-xl text-xs font-semibold border border-theme bg-theme/20 text-white transition-all';
         faBtn.className = 'py-2 rounded-xl text-xs font-semibold border border-gray-800 bg-black/40 text-gray-400 transition-all';
         fileContainer.classList.remove('hidden');
         faContainer.classList.add('hidden');
       } else {
-        faBtn.className = 'py-2 rounded-xl text-xs font-semibold border border-neon-red bg-neon-red/20 text-white transition-all';
+        faBtn.className = 'py-2 rounded-xl text-xs font-semibold border border-theme bg-theme/20 text-white transition-all';
         fileBtn.className = 'py-2 rounded-xl text-xs font-semibold border border-gray-800 bg-black/40 text-gray-400 transition-all';
         faContainer.classList.remove('hidden');
         fileContainer.classList.add('hidden');
@@ -578,7 +930,7 @@
       updateEditPreview();
     }
 
-    // Preview Uploaded SVG/Image
+    // Preview File Uploads
     function previewUploadedFile(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -588,13 +940,12 @@
         uploadedIconData = evt.target.result;
         const previewBox = document.getElementById('icon-preview-box');
         const previewTarget = document.getElementById('icon-preview-target');
-        previewTarget.innerHTML = `<img src="${uploadedIconData}" class="w-8 h-8 object-contain">`;
+        previewTarget.innerHTML = `<img src="${uploadedIconData}" class="w-10 h-10 object-contain">`;
         previewBox.classList.remove('hidden');
       };
       reader.readAsDataURL(file);
     }
 
-    // Preview Edit Uploaded SVG/Image
     function previewEditUploadedFile(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -611,7 +962,7 @@
       const previewTarget = document.getElementById('edit-icon-preview-target');
       if (editIconType === 'file') {
         if (editUploadedIconData) {
-          previewTarget.innerHTML = `<img src="${editUploadedIconData}" class="w-8 h-8 object-contain">`;
+          previewTarget.innerHTML = `<img src="${editUploadedIconData}" class="w-10 h-10 object-contain">`;
         } else {
           previewTarget.innerHTML = `<i class="fa-solid fa-image text-gray-500"></i>`;
         }
@@ -627,7 +978,7 @@
       }
     }
 
-    // Modal Control Functions
+    // Modals Management
     function openAddModal() {
       const modal = document.getElementById('add-modal');
       const content = document.getElementById('add-modal-content');
@@ -650,14 +1001,14 @@
       uploadedIconData = '';
     }
 
-    // Edit Modal Control Functions
-    function openEditModal(index) {
-      const item = websites[index];
+    function openEditModal(id) {
+      const item = websites.find(w => w.id === id);
       if (!item) return;
 
-      document.getElementById('edit-site-index').value = index;
+      document.getElementById('edit-site-id').value = item.id;
       document.getElementById('edit-site-name').value = item.name || '';
       document.getElementById('edit-site-url').value = item.url || '';
+      document.getElementById('edit-site-folder').value = item.folder || 'General';
       document.getElementById('edit-site-desc').value = item.description || '';
 
       editIconType = item.iconType || 'file';
@@ -686,9 +1037,8 @@
       editUploadedIconData = '';
     }
 
-    // Description Modal Controls
-    function openDescModal(index) {
-      const item = websites[index];
+    function openDescModal(id) {
+      const item = websites.find(w => w.id === id);
       if (!item) return;
 
       const descModal = document.getElementById('desc-modal');
@@ -697,11 +1047,11 @@
       const textTarget = document.getElementById('desc-modal-text');
 
       if (item.iconType === 'file' && item.iconValue) {
-        iconTarget.innerHTML = `<img src="${item.iconValue}" class="w-10 h-10 object-contain">`;
+        iconTarget.innerHTML = `<img src="${item.iconValue}" class="w-14 h-14 object-contain">`;
       } else if (item.iconValue && item.iconValue.startsWith('fa-')) {
         iconTarget.innerHTML = `<i class="${item.iconValue}"></i>`;
       } else {
-        iconTarget.innerHTML = `<span class="text-2xl">${item.iconValue || '🌐'}</span>`;
+        iconTarget.innerHTML = `<span class="text-3xl">${item.iconValue || '🌐'}</span>`;
       }
 
       titleTarget.textContent = item.name;
@@ -717,24 +1067,26 @@
       descModal.classList.remove('opacity-100');
     }
 
-    // Add New Website Form Handler
+    // Form Submissions
     function handleAddWebsite(e) {
       e.preventDefault();
       const name = document.getElementById('site-name').value.trim();
       const url = document.getElementById('site-url').value.trim();
+      const folder = document.getElementById('site-folder').value.trim() || 'General';
       const desc = document.getElementById('site-desc').value.trim();
       const faValue = document.getElementById('site-icon-fa').value.trim();
 
-      let iconValue = '';
-      if (currentIconType === 'file') {
-        iconValue = uploadedIconData;
-      } else {
-        iconValue = faValue || 'fa-solid fa-globe';
+      let iconValue = (currentIconType === 'file') ? uploadedIconData : (faValue || 'fa-solid fa-globe');
+
+      if (!customFolders.includes(folder)) {
+        customFolders.push(folder);
       }
 
       websites.push({
+        id: 'site_' + Date.now(),
         name,
         url,
+        folder,
         description: desc,
         iconType: currentIconType,
         iconValue: iconValue
@@ -745,27 +1097,29 @@
       showToast('¡Enlace añadido con éxito!');
     }
 
-    // Edit Website Form Handler
     function handleEditWebsite(e) {
       e.preventDefault();
-      const index = parseInt(document.getElementById('edit-site-index').value, 10);
-      if (isNaN(index) || !websites[index]) return;
+      const id = document.getElementById('edit-site-id').value;
+      const index = websites.findIndex(w => w.id === id);
+      if (index === -1) return;
 
       const name = document.getElementById('edit-site-name').value.trim();
       const url = document.getElementById('edit-site-url').value.trim();
+      const folder = document.getElementById('edit-site-folder').value.trim() || 'General';
       const desc = document.getElementById('edit-site-desc').value.trim();
       const faValue = document.getElementById('edit-site-icon-fa').value.trim();
 
-      let iconValue = '';
-      if (editIconType === 'file') {
-        iconValue = editUploadedIconData;
-      } else {
-        iconValue = faValue || 'fa-solid fa-globe';
+      let iconValue = (editIconType === 'file') ? editUploadedIconData : (faValue || 'fa-solid fa-globe');
+
+      if (!customFolders.includes(folder)) {
+        customFolders.push(folder);
       }
 
       websites[index] = {
+        id,
         name,
         url,
+        folder,
         description: desc,
         iconType: editIconType,
         iconValue: iconValue
@@ -776,23 +1130,29 @@
       showToast('¡Enlace actualizado!');
     }
 
-    // Delete Website
-    function deleteWebsite(index) {
+    function deleteWebsite(id) {
       if (confirm('¿Seguro que deseas eliminar este sitio?')) {
-        websites.splice(index, 1);
+        websites = websites.filter(w => w.id !== id);
         saveWebsites();
         showToast('Enlace eliminado.');
       }
     }
 
-    // Backup Export (Save) System
+    // Backup Export & Import
     function exportBackup() {
-      if (websites.length === 0) {
+      if (websites.length === 0 && customFolders.length === 0) {
         showToast('No hay datos para guardar', 'error');
         return;
       }
 
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(websites, null, 2));
+      const backupData = {
+        theme: currentTheme,
+        customFolders: customFolders,
+        collapsedFolders: collapsedFolders,
+        websites: websites
+      };
+
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
       downloadAnchor.setAttribute("download", `my_websites_backup_${new Date().toISOString().slice(0,10)}.json`);
@@ -803,12 +1163,10 @@
       showToast('Copia de seguridad guardada');
     }
 
-    // Trigger Import File Browser
     function triggerImport() {
       document.getElementById('import-file-input').click();
     }
 
-    // Backup Import (Load) System
     function importBackup(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -819,11 +1177,18 @@
           const importedData = JSON.parse(e.target.result);
           if (Array.isArray(importedData)) {
             websites = importedData;
-            saveWebsites();
-            showToast('¡Backup cargado correctamente!');
+          } else if (importedData && Array.isArray(importedData.websites)) {
+            websites = importedData.websites;
+            if (importedData.customFolders) customFolders = importedData.customFolders;
+            if (importedData.theme) setTheme(importedData.theme);
+            if (importedData.collapsedFolders) collapsedFolders = importedData.collapsedFolders;
           } else {
             showToast('Formato de archivo inválido', 'error');
+            return;
           }
+          
+          saveWebsites();
+          showToast('¡Backup cargado correctamente!');
         } catch (err) {
           showToast('Error al leer el archivo JSON', 'error');
         }
@@ -832,13 +1197,13 @@
       event.target.value = '';
     }
 
-    // Toast Notification System
+    // Toast Notifications
     function showToast(message, type = 'success') {
       const container = document.getElementById('toast-container');
       const toast = document.createElement('div');
       
-      const borderColor = type === 'error' ? 'border-red-500' : 'border-neon-red';
-      const icon = type === 'error' ? 'fa-triangle-exclamation text-red-500' : 'fa-circle-check text-neon-red';
+      const borderColor = type === 'error' ? 'border-red-500' : 'border-ios-border';
+      const icon = type === 'error' ? 'fa-triangle-exclamation text-red-500' : 'fa-circle-check text-theme';
 
       toast.className = `glass-ios ${borderColor} border px-5 py-3 rounded-2xl flex items-center gap-3 shadow-neon-glow pointer-events-auto transform translate-y-[-20px] opacity-0 transition-all duration-300`;
       toast.innerHTML = `
@@ -848,18 +1213,17 @@
 
       container.appendChild(toast);
 
-      setTimeout(() => {
-        toast.classList.remove('translate-y-[-20px]', 'opacity-0');
-      }, 10);
-
+      setTimeout(() => toast.classList.remove('translate-y-[-20px]', 'opacity-0'), 10);
       setTimeout(() => {
         toast.classList.add('opacity-0', 'translate-y-[-20px]');
         setTimeout(() => toast.remove(), 300);
       }, 3000);
     }
 
-    // Canvas Red Neon Particles Background Logic
-    function initParticles() {
+    // ----------------------------------------------------
+    // BACKGROUND CANVAS: PARTICLES + REALISTIC NYSE CANDLESTICKS
+    // ----------------------------------------------------
+    function initBackgroundCanvas() {
       const canvas = document.getElementById('particles-canvas');
       const ctx = canvas.getContext('2d');
 
@@ -869,17 +1233,19 @@
       window.addEventListener('resize', () => {
         width = canvas.width = window.innerWidth;
         height = canvas.height = window.innerHeight;
+        initCandles();
       });
 
+      // --- PARTICLES ENGINE ---
       const particles = [];
-      const particleCount = Math.min(Math.floor(width / 15), 85);
+      const particleCount = Math.min(Math.floor(width / 15), 75);
 
       class Particle {
         constructor() {
           this.x = Math.random() * width;
           this.y = Math.random() * height;
-          this.vx = (Math.random() - 0.5) * 0.8;
-          this.vy = (Math.random() - 0.5) * 0.8;
+          this.vx = (Math.random() - 0.5) * 0.7;
+          this.vy = (Math.random() - 0.5) * 0.7;
           this.radius = Math.random() * 2 + 1;
         }
 
@@ -892,11 +1258,12 @@
         }
 
         draw() {
+          const particleColor = currentTheme === 'cyan' ? '#00ffff' : '#ff0033';
           ctx.beginPath();
           ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-          ctx.fillStyle = '#ff0033';
-          ctx.shadowBlur = 10;
-          ctx.shadowColor = '#ff0033';
+          ctx.fillStyle = particleColor;
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = particleColor;
           ctx.fill();
         }
       }
@@ -905,8 +1272,85 @@
         particles.push(new Particle());
       }
 
+      // --- NYSE JAPANESE CANDLESTICKS ENGINE ---
+      let candles = [];
+
+      class Candlestick {
+        constructor(x, candleWidth) {
+          this.x = x;
+          this.width = candleWidth;
+          
+          this.baseY = Math.random() * (height * 0.6) + height * 0.2;
+          this.openY = this.baseY;
+          this.closeY = this.baseY - (Math.random() * 35 - 17.5);
+          
+          this.topWickLength = Math.random() * 20 + 5;
+          this.bottomWickLength = Math.random() * 20 + 5;
+
+          this.phase = Math.random() * Math.PI * 2;
+          this.speed = Math.random() * 0.015 + 0.005;
+          this.amplitude = Math.random() * 25 + 10;
+          this.opacity = Math.random() * 0.35 + 0.2;
+        }
+
+        update() {
+          this.phase += this.speed;
+          const delta = Math.sin(this.phase) * this.amplitude;
+          this.closeY = this.openY - delta;
+        }
+
+        draw() {
+          const isBullish = this.closeY < this.openY;
+          const candleColor = isBullish ? '#00ff88' : '#ff0033';
+
+          ctx.save();
+          ctx.globalAlpha = this.opacity;
+          ctx.strokeStyle = candleColor;
+          ctx.fillStyle = candleColor;
+          ctx.lineWidth = 1.5;
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = candleColor;
+
+          const topBodyY = Math.min(this.openY, this.closeY);
+          const bottomBodyY = Math.max(this.openY, this.closeY);
+          const bodyHeight = Math.max(bottomBodyY - topBodyY, 3);
+
+          const wickX = this.x + this.width / 2;
+          ctx.beginPath();
+          ctx.moveTo(wickX, topBodyY - this.topWickLength);
+          ctx.lineTo(wickX, bottomBodyY + this.bottomWickLength);
+          ctx.stroke();
+
+          ctx.fillRect(this.x, topBodyY, this.width, bodyHeight);
+
+          ctx.restore();
+        }
+      }
+
+      function initCandles() {
+        candles = [];
+        const candleWidth = Math.min(Math.max(width / 45, 10), 18);
+        const spacing = candleWidth * 2.2;
+        const totalCandles = Math.floor(width / spacing);
+
+        for (let i = 0; i < totalCandles; i++) {
+          const x = i * spacing + spacing / 2;
+          candles.push(new Candlestick(x, candleWidth));
+        }
+      }
+
+      initCandles();
+
+      // --- ANIMATION LOOP ---
       function animate() {
         ctx.clearRect(0, 0, width, height);
+
+        for (let i = 0; i < candles.length; i++) {
+          candles[i].update();
+          candles[i].draw();
+        }
+
+        const strokeRgb = currentTheme === 'cyan' ? '0, 255, 255' : '255, 0, 51';
 
         for (let i = 0; i < particles.length; i++) {
           particles[i].update();
@@ -917,16 +1361,17 @@
             const dy = particles[i].y - particles[j].y;
             const dist = Math.sqrt(dx * dx + dy * dy);
 
-            if (dist < 120) {
+            if (dist < 110) {
               ctx.beginPath();
               ctx.moveTo(particles[i].x, particles[i].y);
               ctx.lineTo(particles[j].x, particles[j].y);
-              ctx.strokeStyle = `rgba(255, 0, 51, ${1 - dist / 120})`;
+              ctx.strokeStyle = `rgba(${strokeRgb}, ${0.8 - dist / 110})`;
               ctx.lineWidth = 0.5;
               ctx.stroke();
             }
           }
         }
+
         requestAnimationFrame(animate);
       }
 
