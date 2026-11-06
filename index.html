@@ -227,6 +227,11 @@
       </button>
       <input type="file" id="import-file-input" accept=".json" class="hidden" onchange="importBackup(event)">
 
+      <!-- Restaurar / Reset Button -->
+      <button onclick="resetAllData()" title="Restaurar todo a cero" class="w-12 h-12 rounded-2xl glass-ios flex items-center justify-center text-theme hover:text-white hover:bg-theme hover:shadow-neon-btn transition-all duration-300">
+        <i class="fa-solid fa-rotate-left text-lg"></i>
+      </button>
+
       <!-- Añadir Enlace (+) Button -->
       <button onclick="openAddModal()" title="Añadir enlace" class="w-12 h-12 rounded-2xl glass-ios flex items-center justify-center text-theme hover:text-white hover:bg-theme hover:shadow-neon-btn transition-all duration-300">
         <i class="fa-solid fa-plus text-xl"></i>
@@ -250,7 +255,7 @@
         <button onclick="openFolderModal()" class="px-5 py-3 rounded-2xl bg-white/10 text-white font-semibold hover:bg-white/20 transition-all flex items-center gap-2">
           <i class="fa-solid fa-folder-plus"></i> Crear Carpeta
         </button>
-        <button onclick="openAddModal()" class="px-6 py-3 rounded-2xl bg-theme text-white font-semibold shadow-neon-btn hover:opacity-90 transition-all flex items-center gap-2">
+        <button onclick="openAddModal()" class="px-6 py-3 rounded-2xl bg-theme text-white font-semibold shadow-neon-btn hover:opacity-90 transition-all flex items-center justify-center gap-2">
           <i class="fa-solid fa-plus"></i> Añadir Sitio
         </button>
       </div>
@@ -455,12 +460,12 @@
           <!-- Input Archivo SVG/Imagen Editar -->
           <div id="edit-icon-file-container" class="space-y-2">
             <input type="file" id="edit-site-file" accept="image/*, .ico, .svg" onchange="previewEditUploadedFile(event)" class="w-full text-xs text-gray-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-theme/20 file:text-theme hover:file:bg-theme hover:file:text-white transition-all cursor-pointer">
-            <p class="text-[10px] text-gray-500">Deja vacío si prefieres conservar el archivo de icono actual.</p>
+            <p class="text-[10px] text-gray-500">Selecciona una nueva imagen o deja vacío para conservar la actual.</p>
           </div>
 
           <!-- Input FontAwesome / Emoji Editar -->
           <div id="edit-icon-fa-container" class="hidden space-y-2">
-            <input type="text" id="edit-site-icon-fa" placeholder="Ej: fa-brands fa-youtube o 🚀" class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-theme transition-all">
+            <input type="text" id="edit-site-icon-fa" oninput="updateEditPreview()" placeholder="Ej: fa-brands fa-youtube o 🚀" class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-theme transition-all">
           </div>
         </div>
 
@@ -502,10 +507,10 @@
   <!-- JavaScript Code Base -->
   <script>
     let websites = [];
-    let customFolders = []; // Estructura: [{ name: "Trading", subfolders: ["Opciones", "Forex"] }]
+    let customFolders = []; // [{ name: "Trading", subfolders: ["Opciones", "Forex"] }]
     let currentTheme = 'red';
     let collapsedFolders = {};
-    let activeSubfolderTab = {}; // Almacena la subcarpeta activa por carpeta principal { "Trading": "Opciones" }
+    let activeSubfolderTab = {};
 
     let currentIconType = 'file';
     let uploadedIconData = '';
@@ -515,7 +520,7 @@
 
     let draggedId = null;
     let draggedFolderName = null;
-    let draggedSubfolderInfo = null; // { parent: 'Trading', sub: 'Opciones' }
+    let draggedSubfolderInfo = null;
 
     // Initialize Page
     document.addEventListener('DOMContentLoaded', () => {
@@ -591,6 +596,20 @@
       localStorage.setItem('yasma_my_websites_folders', JSON.stringify(customFolders));
       localStorage.setItem('yasma_my_websites_collapsed', JSON.stringify(collapsedFolders));
       renderWebsites();
+    }
+
+    function resetAllData() {
+      if (confirm('¿Estás seguro de que deseas restaurar la página a 0? Se eliminarán todas las carpetas y enlaces guardados.')) {
+        localStorage.removeItem('yasma_my_websites');
+        localStorage.removeItem('yasma_my_websites_folders');
+        localStorage.removeItem('yasma_my_websites_collapsed');
+        websites = [];
+        customFolders = [];
+        collapsedFolders = {};
+        activeSubfolderTab = {};
+        renderWebsites();
+        showToast('La página ha sido restaurada a 0');
+      }
     }
 
     function toggleFolder(folderKey) {
@@ -672,7 +691,7 @@
       if (parentObj) {
         if (!parentObj.subfolders.includes(subName)) {
           parentObj.subfolders.push(subName);
-          activeSubfolderTab[parentName] = subName; // Seleccionar la subcarpeta recién creada
+          activeSubfolderTab[parentName] = subName;
           saveWebsites();
           showToast(`Subcarpeta "${subName}" creada`);
         } else {
@@ -795,10 +814,6 @@
       container.innerHTML = '';
       datalist.innerHTML = '';
 
-      if (!customFolders.some(f => f.name === 'General')) {
-        customFolders.unshift({ name: 'General', subfolders: [] });
-      }
-
       websites.forEach(item => {
         const parts = item.folder ? item.folder.split(' / ') : ['General'];
         const mainName = parts[0];
@@ -879,11 +894,9 @@
               <button onclick="event.stopPropagation(); openEditFolderModal('${mainName}', 'main');" title="Editar carpeta" class="text-gray-400 hover:text-white transition-colors text-sm px-2 py-1">
                 <i class="fa-solid fa-pen-to-square"></i>
               </button>
-              ${mainName !== 'General' ? `
-                <button onclick="event.stopPropagation(); deleteFolder('${mainName}', 'main');" title="Eliminar carpeta" class="text-gray-500 hover:text-theme transition-colors text-sm px-2 py-1">
-                  <i class="fa-solid fa-trash-can"></i>
-                </button>
-              ` : ''}
+              <button onclick="event.stopPropagation(); deleteFolder('${mainName}', 'main');" title="Eliminar carpeta" class="text-gray-500 hover:text-theme transition-colors text-sm px-2 py-1">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
               <i class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-300 ${isMainCollapsed ? '-rotate-90' : ''} ml-1"></i>
             </div>
           </div>
@@ -905,7 +918,6 @@
         const grid = folderSection.querySelector(`#grid-tab-${CSS.escape(mainName)}`);
         displayedItems.forEach(item => grid.appendChild(createCardElement(item)));
 
-        // Configurar Eventos de Drag & Drop para Pestañas
         setupSubfolderTabDragEvents(folderSection, mainName);
       });
     }
@@ -924,13 +936,11 @@
 
       return `
         <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 border-b border-gray-800/50">
-          <!-- Pestaña 'Todo' -->
           <button onclick="selectSubfolderTab('${mainName}', 'all')" class="px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 ${activeTab === 'all' ? 'bg-theme text-white shadow-neon-btn' : 'bg-black/40 text-gray-400 hover:text-white hover:bg-white/10'}">
             <i class="fa-solid fa-layer-group"></i> Todo
             <span class="text-[10px] px-1.5 py-0.2 rounded-full ${activeTab === 'all' ? 'bg-black/30 text-white' : 'bg-white/10 text-gray-400'}">${allCount}</span>
           </button>
 
-          <!-- Pestañas de Subcarpetas Arrastrables -->
           ${mainObj.subfolders.map((subName, subIndex) => {
             const subPath = `${mainName} / ${subName}`;
             const isSelected = activeTab === subName;
@@ -949,7 +959,6 @@
                 <span>${subName}</span>
                 <span class="text-[10px] px-1.5 py-0.2 rounded-full ${isSelected ? 'bg-theme text-white' : 'bg-white/10 text-gray-400'}">${count}</span>
                 
-                <!-- Acciones Rápidas en Pestaña -->
                 <div class="flex items-center gap-1 ml-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   <span onclick="event.stopPropagation(); openEditFolderModal('${subPath}', 'sub');" title="Editar subcarpeta" class="hover:text-theme px-1">
                     <i class="fa-solid fa-pen-to-square text-[11px]"></i>
@@ -993,7 +1002,6 @@
 
           const targetSub = tab.getAttribute('data-tab-sub');
 
-          // 1. Reordenar Pestañas
           if (draggedSubfolderInfo && draggedSubfolderInfo.parent === mainName) {
             const mainObj = customFolders.find(f => f.name === mainName);
             if (mainObj) {
@@ -1011,7 +1019,6 @@
             return;
           }
 
-          // 2. Mover Acceso Directo a Pestaña Soltada
           if (draggedId) {
             const destPath = `${mainName} / ${targetSub}`;
             const item = websites.find(w => w.id === draggedId);
@@ -1077,7 +1084,7 @@
       return card;
     }
 
-    // --- DRAG AND DROP HANDLERS (CARPETAS Y TARJETAS) ---
+    // --- DRAG AND DROP HANDLERS ---
     function handleMainFolderDragStart(e) {
       if (e.target.closest('.ios-squircle') || e.target.closest('[data-tab-sub]')) return;
       draggedFolderName = this.getAttribute('data-folder-main');
@@ -1160,7 +1167,6 @@
       if (e.stopPropagation) e.stopPropagation();
       this.classList.remove('folder-drag-over');
 
-      // Reordenar carpetas principales
       if (draggedFolderName) {
         const targetMainName = this.getAttribute('data-folder-main');
         if (targetMainName && draggedFolderName !== targetMainName) {
@@ -1177,7 +1183,6 @@
         return false;
       }
 
-      // Mover acceso directo a la carpeta principal
       if (draggedId) {
         const targetMainName = this.getAttribute('data-folder-main');
         if (targetMainName) {
@@ -1326,6 +1331,7 @@
       document.getElementById('edit-site-url').value = item.url || '';
       document.getElementById('edit-site-folder').value = item.folder || 'General';
       document.getElementById('edit-site-desc').value = item.description || '';
+      document.getElementById('edit-site-file').value = '';
 
       editIconType = item.iconType || 'file';
       editUploadedIconData = (item.iconType === 'file') ? (item.iconValue || '') : '';
@@ -1421,7 +1427,12 @@
       const desc = document.getElementById('edit-site-desc').value.trim();
       const faValue = document.getElementById('edit-site-icon-fa').value.trim();
 
-      let iconValue = (editIconType === 'file') ? editUploadedIconData : (faValue || 'fa-solid fa-globe');
+      let finalIconValue = '';
+      if (editIconType === 'file') {
+        finalIconValue = editUploadedIconData || websites[index].iconValue || '';
+      } else {
+        finalIconValue = faValue || 'fa-solid fa-globe';
+      }
 
       websites[index] = {
         id,
@@ -1430,12 +1441,12 @@
         folder,
         description: desc,
         iconType: editIconType,
-        iconValue: iconValue
+        iconValue: finalIconValue
       };
 
       saveWebsites();
       closeEditModal();
-      showToast('¡Enlace actualizado!');
+      showToast('¡Enlace actualizado correctamente!');
     }
 
     function deleteWebsite(id) {
